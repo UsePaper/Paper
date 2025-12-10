@@ -25,15 +25,18 @@ function Editor({ value, onChange, onStatsChange }: Props) {
         },
       }),
       Markdown.configure({
-        html: false,
+        indentation: {
+          style: 'space', // 'space' or 'tab'
+          size: 2, // Number of spaces or tabs
+        },
       }),
       Placeholder.configure({
-        placeholder: "Start writing in markdown…",
+        placeholder: "Start writing…",
       }),
     ],
     content: value,
     onUpdate: ({ editor: tiptap }) => {
-      const markdown = tiptap.storage.markdown.getMarkdown();
+      const markdown = (tiptap.storage.markdown as any).getMarkdown();
       onChange(markdown);
       if (onStatsChange) {
         onStatsChange({ wordCount: countWords(tiptap.getText()) });
@@ -48,9 +51,9 @@ function Editor({ value, onChange, onStatsChange }: Props) {
 
   useEffect(() => {
     if (!editor) return;
-    const currentMarkdown = editor.storage.markdown.getMarkdown();
+    const currentMarkdown = (editor.storage.markdown as any).getMarkdown();
     if (value !== currentMarkdown) {
-      editor.commands.setContent(value, false);
+      editor.commands.setContent(value, { emitUpdate: false });
     }
   }, [editor, value]);
 
