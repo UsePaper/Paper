@@ -35,3 +35,5 @@
 
 #### 2025 12 11 – Codex
 - Added close-request guard in `src/App.tsx` that prompts before quitting when there are unsaved changes.
+- Swapped to Tauri dialog plugin for the confirmation dialog and registered the plugin in the Tauri builder.
+- Tweaked the confirmation dialog labels and warning kind to avoid the default folder icon and clarify actions.

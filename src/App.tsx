@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { confirm } from '@tauri-apps/plugin-dialog';
+import { confirm } from "@tauri-apps/plugin-dialog";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { listen } from "@tauri-apps/api/event";
 import Editor from "./components/Editor";
@@ -200,7 +200,9 @@ function App() {
       if (!isDirty) return;
       const shouldQuit = await confirm("You have unsaved changes. Quit without saving?", {
         title: "Unsaved changes",
-        kind: "warning",
+        kind: "error",
+        okLabel: "Quit",
+        cancelLabel: "Cancel",
       });
       if (!shouldQuit) {
         event.preventDefault();
