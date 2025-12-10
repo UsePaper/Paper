@@ -23,7 +23,7 @@ pub fn run() {
             let about = PredefinedMenuItem::about(handle, None, None)?;
             let settings = MenuItem::with_id(handle, "settings", "Settings", true, None::<&str>)?;
             let hide = PredefinedMenuItem::hide(handle, None)?;
-            let quit = PredefinedMenuItem::quit(handle, None)?;
+            let quit = MenuItem::with_id(handle, "quit", "Quit Paper", true, Some("cmd+q"))?;
             paper_menu.append_items(&[&about, &settings, &hide, &quit])?;
 
             // File
@@ -76,6 +76,7 @@ pub fn run() {
                     || id == "save_as"
                     || id == "settings"
                     || id == "toggle_status_bar"
+                    || id == "quit"
                 {
                     app.emit("menu-event", id.as_ref()).unwrap();
                 }

@@ -183,6 +183,9 @@ function App() {
         case "settings":
           setSettingsOpen(true);
           break;
+        case "quit":
+          getCurrentWindow().close().then(_ => {});
+          break;
       }
     });
 
