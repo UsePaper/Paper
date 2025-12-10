@@ -17,7 +17,7 @@ body {
   padding: 0;
   min-height: 100vh;
   /* Use variables from theme.css */
-  font-family: var(--editor-font-family, var(--font-body, sans-serif));
+  font-family: var(--editor-font-family, var(--font-body, sans-serif)), serif;
   background-color: var(--bg-app, #ffffff);
   color: var(--text-primary, #333333);
 }
