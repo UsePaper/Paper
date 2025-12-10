@@ -15,7 +15,9 @@
         "label": "main",
         "title": "Paper",
         "width": 750,
-        "height": 750
+        "height": 750,
+        "minWidth": 500,
+        "minHeight": 600
       }
     ],
     "security": {
