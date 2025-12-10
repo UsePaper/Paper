@@ -34,15 +34,15 @@ function SettingsModal({ open, settings, onClose, onChange }: Props) {
         className="settings-modal"
         role="dialog"
         aria-modal="true"
-        aria-label="Settings"
+        aria-label="Preferences"
         onClick={(event) => event.stopPropagation()}
       >
         <header className="settings-header">
           <div>
-            <h2>Settings</h2>
+            <h2>Preferences</h2>
             <p>Personalize the editor to match your writing flow.</p>
           </div>
-          <button className="settings-close" type="button" onClick={onClose} aria-label="Close settings">
+          <button className="settings-close" type="button" onClick={onClose} aria-label="Close preferences">
             <svg
               width="16"
               height="16"
