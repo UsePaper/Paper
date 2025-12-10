@@ -4,8 +4,12 @@ use tauri::Emitter;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
-        .plugin(tauri_plugin_devtools::init())
+    #[cfg(debug_assertions)]
+    let builder = tauri::Builder::default().plugin(tauri_plugin_devtools::init());
+    #[cfg(not(debug_assertions))]
+    let builder = tauri::Builder::default();
+    
+    builder
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_fs::init())
         .setup(|app| {
