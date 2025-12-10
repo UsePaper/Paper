@@ -1,0 +1,31 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Squircle -->
+  <rect x="0" y="0" width="1024" height="1024" rx="224" fill="#0969da"/>
+  
+  <!-- Paper Sheet -->
+  <g filter="url(#shadow)">
+    <path d="M256 200 H 640 L 768 328 V 824 A 32 32 0 0 1 736 856 H 256 A 32 32 0 0 1 224 824 V 232 A 32 32 0 0 1 256 200 Z" fill="white"/>
+    <!-- Folded Corner -->
+    <path d="M640 200 V 328 H 768" fill="#d0d7de"/>
+  </g>
+
+  <!-- Fake Text Lines -->
+  <rect x="320" y="320" width="280" height="24" rx="12" fill="#f0f0f0"/>
+  <rect x="320" y="400" width="400" height="24" rx="12" fill="#f0f0f0"/>
+  <rect x="320" y="480" width="360" height="24" rx="12" fill="#f0f0f0"/>
+  <rect x="320" y="560" width="380" height="24" rx="12" fill="#f0f0f0"/>
+  <rect x="320" y="640" width="200" height="24" rx="12" fill="#f0f0f0"/>
+  
+  <!-- Definitions for Shadow -->
+  <defs>
+    <filter id="shadow" x="150" y="150" width="700" height="800" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="12"/>
+      <feGaussianBlur stdDeviation="24"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+    </filter>
+  </defs>
+</svg>
