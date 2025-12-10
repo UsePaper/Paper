@@ -33,7 +33,11 @@
 - Connected `App.tsx` to apply settings dynamically via CSS variables for real-time visual updates.
 - Added system-aware theme switching logic.
 
-#### 2025 12 11 – Codex
+#### 2025 12 10 – Codex
 - Added close-request guard in `src/App.tsx` that prompts before quitting when there are unsaved changes.
 - Swapped to Tauri dialog plugin for the confirmation dialog and registered the plugin in the Tauri builder.
 - Tweaked the confirmation dialog labels and warning kind to avoid the default folder icon and clarify actions.
+
+#### 2025 12 10 – Codex
+- Granted `core:window:allow-destroy` permission in `src-tauri/capabilities/default.json` so the app can close windows without permission errors.
+- Fixed word count staying at zero after opening a file by recalculating stats whenever external content changes in `src/components/Editor.tsx`.
