@@ -91,6 +91,11 @@
 /* --- Status Bar --- */
 
 .status-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -118,12 +123,13 @@
   justify-content: center;
   overflow-y: auto;
   position: relative;
+  padding-bottom: 32px; /* Space for fixed status bar */
 }
 
 .editor-surface {
   width: 100%;
   max-width: var(--editor-content-width);
-  min-height: calc(100vh - 80px); /* Fill space */
+  min-height: 100vh; /* Fill full viewport height */
   background-color: var(--bg-paper);
   padding: 48px 60px;
   margin: 0 auto;
