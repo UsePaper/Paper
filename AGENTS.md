@@ -315,7 +315,7 @@ Implement the central editor component that gives a Typora like single pane edit
 
 1. Choose editor library
 
-   * Use TipTap with Markdown extension, or a similar ProseMirror wrapper that:
+   * Use TipTap with Markdown extension that:
 
      * Allows markdown shortcuts for headings, lists, bold, italics, code blocks, and blockquotes.
      * Renders styled blocks instead of raw markdown.
@@ -550,7 +550,7 @@ This section describes the order in which Codex should run the agents and implem
 
 2.2. WYSIWYM markdown editor implementer:
 
-   * Integrate TipTap or similar markdown aware editor.
+   * Integrate TipTap markdown aware editor.
    * Implement Editor component with WYSIWYM behaviour.
    * Ensure live updates and word count reporting.
 
