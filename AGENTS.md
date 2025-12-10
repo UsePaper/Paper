@@ -21,632 +21,448 @@ Backend: Tauri with Rust commands for file system operations and basic app plumb
 
 ---
 
-## 1. Core scope and non goals
+# 0. MVP 1 Summary – Core Editor Foundation (Completed)
 
-### 1.1 Core features for MVP
+Paper MVP 1 delivered a complete **functional foundation** for a single-document, Typora-style Markdown editor. The goal was correctness, stability, and workflow safety rather than visual polish.
 
-The app must support:
+### ✅ Core Editing System
 
-1. **Single document window**
+* Single-pane **WYSIWYM Markdown editor** implemented.
+* No preview mode and no mode switching.
+* Live rendering of:
 
-   * One main window with a single document view.
-   * Simple app title bar with document name and dirty marker, example `Untitled.md • Typora MVP`.
+    * Headings
+    * Bold, italic
+    * Lists (ordered and unordered)
+    * Blockquotes
+    * Inline code and code blocks
+    * Links
+* Editor exports and imports clean Markdown.
+* Word count tracking integrated.
 
-2. **WYSIWYM markdown editing**
+### ✅ File System Integration
 
-   * Typing markdown shortcuts applies formatting as you type.
-   * Examples:
+* Fully working:
 
-     * `# ` at the start of a line transforms into H1 heading.
-     * `## ` to `#### ` for smaller headings.
-     * `*text*` or `_text_` becomes italic.
-     * `**text**` or `__text__` becomes bold.
-     * `> ` at the start becomes a block quote.
-     * `- ` or `* ` at line start becomes a bullet list.
-     * `1. ` becomes a numbered list.
-     * ` ` (three backticks) starts a code block.
-   * Rendered view shows headings, lists, bold, italics, etc, without raw markdown markers where possible.
+    * New
+    * Open
+    * Save
+    * Save As
+* UTF-8 safe file read and write via Rust + Tauri commands.
+* Native OS file dialogs.
+* Safe error handling with no panics.
 
-3. **Basic markdown structures**
+### ✅ Dirty State Protection
 
-   * Headings H1 to H4.
-   * Paragraphs.
-   * Bold and italics.
-   * Inline code.
-   * Code fences.
-   * Unordered and ordered lists.
-   * Blockquotes.
-   * Horizontal rules.
-   * Links (inline URL, basic).
-   * Inline images by URL (file import is optional, see below).
+* Real dirty state detection.
+* Confirmation dialogs on:
 
-4. **File operations**
+    * New file with unsaved changes
+    * Open with unsaved changes
+    * Window close with unsaved changes
+* `lastSavedContent` tracking to prevent false dirty states.
 
-   * New file (starts as `Untitled.md`).
-   * Open existing `.md` file from disk.
-   * Save current document.
-   * Save As.
-   * Track dirty state and prompt before closing when unsaved changes exist.
+### ✅ App Layout
 
-5. **Basic UX**
+* Three-part layout:
 
-   * Minimal toolbar or no toolbar, but at least:
+    * TitleBar (document name + dirty indicator)
+    * Editor (main content)
+    * StatusBar (word count)
+* Single window only.
+* One document at a time.
 
-     * A simple top bar for document title.
-     * A subtle status bar at the bottom with:
+### ✅ Keyboard Shortcuts
 
-       * Word count.
-       * Line and column display is optional, but nice to have.
-   * Light and dark themes that follow system theme if possible.
-   * Command palette or menus for shortcuts is optional, but basic keyboard shortcuts must exist (Cmd or Ctrl plus S, O, N).
+* Cmd/Ctrl + N → New
+* Cmd/Ctrl + O → Open
+* Cmd/Ctrl + S → Save
+* Cmd/Ctrl + Shift + S → Save As
 
-6. **Keyboard shortcuts**
+### ✅ Theming (Basic)
 
-   * Cmd or Ctrl plus N for new file.
-   * Cmd or Ctrl plus O for open.
-   * Cmd or Ctrl plus S for save.
-   * Cmd or Ctrl plus Shift plus S for Save As.
-   * Standard selection and navigation keys should work inside the editor.
+* Light and Dark themes implemented.
+* System theme support via `prefers-color-scheme`.
 
-7. **Cross platform build setup**
+### ✅ Cross-Platform Readiness
 
-   * Tauri project configured to build on macOS, Windows, Linux.
-   * Documented build commands in `README.md`.
+* Builds and runs using:
 
-### 1.2 Explicit non goals for MVP
-
-These are nice to have, but explicitly not required in this first version:
-
-* No file tree panel or folder sidebar.
-* No multiple tabs or multiple documents at once.
-* No export to PDF, DOCX, LaTeX, or other formats.
-* No math rendering or diagrams.
-* No images upload to cloud, relative path helpers, or inline image resizing.
-* No focus mode or typewriter mode.
-* No table editing or advanced markdown extensions like footnotes or front matter.
-* No sync or cloud features.
-* No plugin system or custom themes beyond a simple light and dark theme.
+    * `tauri dev`
+    * `tauri build`
+* macOS, Windows, and Linux supported at the infrastructure level.
 
 ---
 
-## 2. Repository structure
+### MVP 1 Philosophy
 
-This is the **existing verified directory structure** that Codex must respect:
+MVP 1 intentionally avoided:
 
-```text
-Paper/
-├── index.html
-├── package.json
-├── pnpm-lock.yaml
-├── public/
-│   ├── tauri.svg
-│   └── vite.svg
-├── README.md
-├── src/
-│   ├── App.css
-│   ├── App.tsx
-│   ├── assets/
-│   │   └── react.svg
-│   ├── main.tsx
-│   └── vite-env.d.ts
-├── src-tauri/
-│   ├── build.rs
-│   ├── capabilities/
-│   │   └── default.json
-│   ├── Cargo.lock
-│   ├── Cargo.toml
-│   ├── gen/
-│   │   └── schemas/
-│   ├── icons/
-│   ├── src/
-│   │   ├── lib.rs
-│   │   └── main.rs
-│   └── tauri.conf.json
-├── tsconfig.json
-├── tsconfig.node.json
-└── vite.config.ts
-```
+* Tabs
+* Sidebars
+* Settings
+* Menus
+* Tables
+* Export formats
+* Focus modes
+* Plugins
+* Custom themes
 
-Codex **must modify and extend these files only**.
-No new project scaffolding is allowed.
-
+It established a **correct, safe, single-document Markdown writing engine** as the base for all future refinement.
 
 ---
 
-## 3. Agents and responsibilities
+#  MVP 2
 
-Each agent has a goal, owned files, and step by step tasks.
+*UI, Aesthetics, Native Menus, and Personalization*
 
-### 3.1 Agent: Rust backend and Tauri command author
+This phase assumes **MVP 1 is fully complete and stable**.
+MVP 2 introduces **native OS integration and visual refinement only**.
+No new core editing or file logic is permitted in this phase.
 
-**Goal**
-Provide a minimal Rust backend for file IO and app integration with the OS.
+---
 
-**Owns**
+## 0. MVP 2 Goals
 
-* `src-tauri/src/lib.rs`
+Paper MVP 2 focuses on:
+
+* Removing custom chrome
+* Using **native OS menus**
+* Improving **visual calm and polish**
+* Adding a **Settings system for personalization**
+* Making the app feel like a true macOS-first writing tool
+
+No productivity features are added in this phase.
+Only **presentation, customization, and OS correctness**.
+
+---
+
+## 1. High Level Changes from MVP 1
+
+1. **TitleBar component is removed**
+
+    * `Untitled.md` and dirty indicator move to the **native window title**
+    * All file actions move to **macOS menu bar**
+
+2. **StatusBar becomes toggleable**
+
+    * New menu option: **View → Toggle Status Bar**
+
+3. **New Settings system**
+
+    * New menu: **Paper → Settings**
+    * User can customize:
+
+        * Editor font family
+        * Editor font size
+        * Line height
+        * Content width
+        * Theme mode: Light, Dark, System
+
+4. **Visual refinement**
+
+    * Typography upgraded
+    * Better spacing
+    * Platform-native look and feel
+
+---
+
+## 2. Agent Execution Order for MVP 2
+
+Codex must execute in this exact order:
+
+1. **Agent 1 – Native Menu and Window Integration**
+2. **Agent 2 – Settings System and Persistence**
+3. **Agent 3 – Visual Polish and Typography System**
+
+Each agent has acceptance criteria that must pass before continuing.
+
+---
+
+# AGENT 1 – Native Menu and Window Integration
+
+## Goal
+
+Replace all custom window controls with **true macOS native menus** and move the document title into the **window chrome**.
+
+---
+
+## Owns
+
 * `src-tauri/src/main.rs`
 * `src-tauri/tauri.conf.json`
-* `src-tauri/Cargo.toml` if dependencies are required
-
-**Tasks**
-
-1. Define Tauri commands
-
-   * In `commands.rs` define functions:
-
-     * `read_file(path: String) -> Result<String, String>`
-     * `write_file(path: String, contents: String) -> Result<(), String>`
-     * `show_open_dialog() -> Result<Option<String>, String>`.
-     * `show_save_dialog(default_file_name: String) -> Result<Option<String>, String>` or similar.
-   * Use Rust standard library for reading and writing UTF8 text files.
-
-2. Register commands in `main.rs`
-
-   * Register all commands using `tauri::generate_handler!`.
-   * Launch the app with a single window.
-
-3. Configure security in `tauri.conf.json`
-
-   * Allow file access for markdown documents.
-   * Restrict paths to user chosen locations only, use standard Tauri patterns.
-   * Ensure `allowlist.fs` and `allowlist.dialog` settings are enabled as needed.
-
-4. Error handling
-
-   * For each command, return human readable error messages.
-   * Do not panic on IO errors.
-
-5. Build and smoke test
-
-   * Confirm `tauri dev` runs and shows the main window.
-   * Expose commands to the frontend through the standard Tauri JS API.
-
-### 3.2 Agent: Frontend shell and layout engineer
-
-**Goal**
-Create the React shell that holds the editor, with minimal UI chrome and basic interactions.
-
-**Owns**
-
-* `app/src/main.tsx`
-* `app/src/App.tsx`
-* `app/src/components/TitleBar.tsx`
-* `app/src/components/StatusBar.tsx`
-* `app/src/styles/global.css`
-* `app/src/styles/theme.css`
-
-**Tasks**
-
-1. App entry
-
-   * In `main.tsx`, mount `<App />` into `index.html`.
-   * Wire in global styles.
-
-2. App layout
-
-   * In `App.tsx`:
-
-     * Layout:
-
-       * Vertical flex column.
-       * Top: `TitleBar`.
-       * Center: `Editor`.
-       * Bottom: `StatusBar`.
-     * Maintain React state:
-
-       * `currentFilePath: string | null`.
-       * `documentTitle: string` extracted from file name or "Untitled".
-       * `isDirty: boolean`.
-       * `content: string` as current markdown source, or delegate this to editor agent, but keep at least a top level copy.
-     * Provide callbacks to editor:
-
-       * `onContentChange(newContent: string)`.
-       * `onContentStatsChange(stats)`, for example word count, line count.
-
-3. Title bar
-
-   * Implement `TitleBar` component:
-
-     * Displays `documentTitle` and dirty marker, for example a dot or asterisk.
-     * Provides buttons or menu items for New, Open, Save, Save As as optional icons.
-     * Invokes callbacks from `App` to perform these actions.
-
-4. Status bar
-
-   * Implement `StatusBar` component:
-
-     * Shows word count, for example `123 words`.
-     * Optionally show document length or line count.
-     * Optionally show current theme indicator.
-
-5. Theme and styling
-
-   * `global.css`:
-
-     * Set basic reset styles.
-     * Use a clean font such as system default, for example `-apple-system`, `Segoe UI`, etc.
-     * Make background neutral and unobtrusive.
-   * `theme.css`:
-
-     * Provide `.theme-light` and `.theme-dark` classes on the root element.
-     * Add styles for headings, paragraphs, blockquotes, lists, code blocks, that feel like a clean reader.
-
-6. System theme integration
-
-   * Use CSS prefers color scheme media query to set initial theme.
-   * Add a simple toggle if needed, but this is optional.
-
-7. Wire file commands
-
-   * Use Tauri JS bridge, for example `@tauri-apps/api`:
-
-     * For open:
-
-       * Prompt user for file path via dialog.
-       * Call Rust `read_file`.
-       * Update `content`, `currentFilePath`, `documentTitle`, `isDirty`.
-     * For save:
-
-       * If `currentFilePath` is not null, call `write_file`.
-       * Otherwise call save dialog then write.
-     * For new file:
-
-       * Prompt to save if `isDirty`.
-       * Clear content, reset file path to null, set title to `Untitled`, clear dirty flag.
-
-8. Keyboard shortcuts
-
-   * Use a library like `react-hotkeys` or manual event listeners.
-   * Bind Cmd or Ctrl plus N, O, S, Shift plus S to the same actions as menu items.
-
-### 3.3 Agent: WYSIWYM markdown editor implementer
-
-**Goal**
-Implement the central editor component that gives a Typora like single pane editing experience, using a markdown aware rich text editor.
-
-**Owns**
-
-* `app/src/components/Editor.tsx`
-* Any editor specific helper files under `app/src/editor/*`.
-* Editor related styling under `app/src/styles/theme.css` or a dedicated CSS file.
-
-**Tasks**
-
-1. Choose editor library
-
-   * Use TipTap with Markdown extension that:
-
-     * Allows markdown shortcuts for headings, lists, bold, italics, code blocks, and blockquotes.
-     * Renders styled blocks instead of raw markdown.
-     * Can export content back to markdown string with a function such as `getMarkdown()` or equivalent.
-
-2. Editor component API
-
-   * `Editor` props:
-
-     * `value: string` current markdown content from parent.
-     * `onChange(newMarkdown: string)` callback when content changes.
-     * `onStatsChange(stats: { wordCount: number })` optional callback.
-   * Internally:
-
-     * Initialise editor state from `value`.
-     * When user types, convert internal document to markdown and call `onChange` with debouncing to avoid too many updates.
-     * Calculate word count from the plain text part of the document and call `onStatsChange`.
-
-3. WYSIWYM behaviour
-
-   * Configure the editor to:
-
-     * Convert `# ` patterns to headings automatically.
-     * Convert `*` and `_` pairs to italic.
-     * Convert `**` and `__` pairs to bold.
-     * Convert `- ` and `1.` at line start to lists.
-     * Convert `> ` at line start to blockquotes.
-   * Ensure the UI shows:
-
-     * Heading sizes and typography, not raw `#`.
-     * Styled lists and blockquotes.
-     * Inline code styled with monospace font and background.
-     * Code blocks with monospace font and background.
-
-4. Minimal toolbar or none
-
-   * MVP can have no visible toolbar, relying entirely on markdown shortcuts and keyboard.
-   * Optionally include a very small inline bubble for basic formatting (bold, italic, code) when text is selected.
-
-5. Styling
-
-   * Ensure content area:
-
-     * Is centered in the window.
-     * Has reasonable max width, for example 700 to 900 pixels.
-     * Has generous line spacing and margins.
-   * Provide support for light and dark themes by referencing CSS variables or theme classes.
-
-6. Focus and selection
-
-   * Make sure clicking inside the page focuses the editor.
-   * Use smooth scrolling inside the main window; avoid nested scrollbars if possible.
-
-7. Initial content
-
-   * On new file, show either:
-
-     * Empty document.
-     * Or a short placeholder such as a heading and a line that explains basic shortcuts, which disappears once user edits. This is optional and must be easy to remove.
-
-8. Synchronisation with parent state
-
-   * When parent passes a new `value` because a file has been opened:
-
-     * Replace editor content with the new markdown, without incorrectly treating it as user typing.
-   * Protect against loops where `onChange` triggers parent state which triggers new props, which triggers another update.
-   * Use an internal flag or a comparison to avoid unnecessary re initialisation.
-
-### 3.4 Agent: File workflow and dirty state guardian
-
-**Goal**
-Ensure file open or save behaviour is safe and predictable, and that users are warned before losing changes.
-
-**Owns**
-
-* Dirty state logic in `App.tsx`.
-* Open, save, save as flows.
-* Interaction between UI and Rust commands.
-
-**Tasks**
-
-1. Dirty state tracking
-
-   * Set `isDirty` to true whenever editor content changes relative to last saved content.
-   * After successful save, set `isDirty` false and update a `lastSavedContent` reference.
-
-2. New file flow
-
-   * If `isDirty` is true:
-
-     * Show a confirm dialog:
-
-       * Save, discard, or cancel.
-     * Save:
-
-       * Run save flow first.
-       * If save success, then create new file.
-     * Discard:
-
-       * Create new file without saving.
-     * Cancel:
-
-       * Do nothing.
-   * New file resets:
-
-     * `currentFilePath = null`.
-     * `documentTitle = "Untitled"`.
-     * `content = ""`.
-     * `isDirty = false`.
-
-3. Open file flow
-
-   * If `isDirty` is true, use same confirm dialog as new file flow.
-   * When user chooses open:
-
-     * Show system open dialog for `.md` files.
-     * Call `read_file` command.
-     * On success:
-
-       * Set `content` to file contents.
-       * Update `currentFilePath` and `documentTitle`.
-       * Set `isDirty = false`, `lastSavedContent = content`.
-
-4. Save flow
-
-   * If `currentFilePath` is null:
-
-     * Run Save As flow.
-   * Otherwise:
-
-     * Call `write_file` with current `content`.
-     * On success, set `isDirty = false`, update `lastSavedContent`.
-
-5. Save As flow
-
-   * Open save dialog with default name `Untitled.md` or current document title.
-   * On user selection:
-
-     * Call `write_file` with chosen path.
-     * Update `currentFilePath` and `documentTitle`.
-     * Set `isDirty = false`.
-
-6. Window close behaviour
-
-   * If the platform allows intercepting window close:
-
-     * If `isDirty` is true:
-
-       * Prompt user to save or discard.
-     * Only allow close when user explicitly chooses to continue.
-
-7. Error handling
-
-   * For any IO error:
-
-     * Show a user friendly message via a dialog or inline alert.
-   * Do not crash the app on failures.
-
-### 3.5 Agent: Theming and polish specialist
-
-**Goal**
-Make the app feel like a minimal but pleasant Typora style environment, without adding extra features.
-
-**Owns**
-
-* Theme CSS files.
-* Small visual refinements in layout components and editor.
-
-**Tasks**
-
-1. Typography
-
-   * Use smooth font rendering.
-   * Heading sizes that are visually distinct.
-   * Comfortable line height, for example 1.5.
-   * Adequate margins between paragraphs and sections.
-
-2. Light theme
-
-   * Soft off white background.
-   * Dark gray text for reduced eye strain.
-   * Gentle accents for links and selection.
-
-3. Dark theme
-
-   * Dark gray background.
-   * Light gray text.
-   * Maintain good contrast for readability.
-
-4. Distraction free feeling
-
-   * Remove borders and excessive lines around the editor.
-   * Hide scrollbars when not in use, but ensure they appear when needed.
-   * Keep color palette simple.
-
-5. Title bar and status bar
-
-   * Make bars visually minimal but readable.
-   * Use subtle separators rather than heavy lines.
-
-6. Icon set
-
-   * Use a small, consistent icon set for toolbar and menu actions if needed.
-   * Icons should be simple and monochrome where possible.
-
-7. Accessibility
-
-   * Ensure text contrast is sufficient.
-   * Keep font sizes reasonable and allow easy future change via CSS variables.
+* `src/App.tsx`
+* Removal of `TitleBar.tsx`
 
 ---
 
-## 4. Development phases and sequence
+## Tasks
 
-This section describes the order in which Codex should run the agents and implement features.
+### 1. Remove Custom TitleBar
 
-### Phase 1 – First steps
-
-1.1. Rust backend and Tauri command author:
-
-   * Implement `read_file`, `write_file`, and dialog helpers.
-   * Register commands.
-   * Confirm Tauri dev build runs.
-
-### Phase 2 – Shell and editor integration
-
-2.1. Frontend shell and layout engineer:
-
-   * Implement `App.tsx`, TitleBar, StatusBar.
-   * Integrate Tauri bridge for file commands.
-   * Wire up keyboard shortcuts.
-
-2.2. WYSIWYM markdown editor implementer:
-
-   * Integrate TipTap markdown aware editor.
-   * Implement Editor component with WYSIWYM behaviour.
-   * Ensure live updates and word count reporting.
-
-2.3. File workflow and dirty state guardian:
-
-   * Implement new, open, save, and save as flows.
-   * Add dirty state logic and confirmation dialogs.
-
-### Phase 3 – Theming and polish
-
-3.1. Theming and polish specialist:
-
-   * Implement light and dark themes.
-   * Adjust typography and spacing.
-   * Remove unnecessary visual noise.
-
-3.2. Final pass:
-
-   * Fix any cross platform issues.
-   * Verify file operations and unsaved changes prompts.
-   * Run through basic user flows and adjust.
+* Delete `<TitleBar />` from `App.tsx`
+* Delete the `TitleBar.tsx` component entirely
+* Remove all related CSS
 
 ---
 
-## 5. Acceptance criteria checklist
+### 2. Move Document Title to Native Window Title
 
-Codex should confirm all of the following before considering the MVP complete.
+* When:
 
-1. Project runs with `tauri dev` on at least one platform and builds with `tauri build`.
-2. App opens with a single window showing:
+    * New file → window title becomes `Untitled.md`
+    * File opened → window title becomes actual filename
+    * Dirty state → append `•` to title
 
-   * A simple title bar with document title and dirty indicator.
-   * A central editor area that feels like a rendered page.
-   * A status bar that at least shows word count.
-3. User can:
+This must be driven from:
 
-   * Type headings and see them styled as headings.
-   * Use markdown patterns for lists, blockquotes, bold, italics.
-   * Create and edit code blocks and inline code.
-4. Markdown syntax does not remain visually noisy:
-
-   * Headings use visual levels rather than literal `#` markers.
-   * Lists and blockquotes are rendered with appropriate indentation and bullets.
-5. File operations:
-
-   * New, open, save, and save as are all implemented and working.
-   * Unsaved changes are not lost without a warning.
-6. Keyboard shortcuts:
-
-   * Cmd or Ctrl plus N, O, S, Shift plus S are functional.
-7. Theming:
-
-   * Light and dark themes both work.
-   * Content area is easy to read.
-8. No preview pane or explicit mode switch is present.
-
-   * There is only one main content area which is both editor and rendered view.
-9. No extra unplanned features are added that complicate the UI.
-
-   * The app remains minimal and focused on writing.
+* Tauri `Window::set_title`
+* Synced from React via a Tauri command
 
 ---
 
-## 6. Logging and coordination
+### 3. Implement Native macOS Menus
 
-Use `AGENTS_LOG.md` to record what each agent has done. For each significant change, append an entry:
+Menus to implement:
 
-* Date and time.
-* Agent name.
-* Short summary of changes.
-* Important decisions or deviations from this plan.
+#### Paper (App Menu)
 
-Example entry format:
+* About Paper
+* Settings
+* Hide Paper
+* Quit Paper
 
-```text
-#### 2025 12 09 – Architect and project bootstrapper
-- Created Tauri plus React template.
-- Configured tauri.conf.json with app name and identifier.
-- Added initial README with setup instructions.
+#### File
 
-```
+* New
+* Open
+* Save
+* Save As
+* Close
 
-Respect agent ownership of files when possible. If one agent must touch another agent’s file, record that clearly in `AGENTS_LOG.md` with a short rationale.
+#### Edit
+
+* Undo
+* Redo
+* Cut
+* Copy
+* Paste
+* Select All
+
+#### View
+
+* Toggle Status Bar
 
 ---
 
-## 7. Future extensions, not for this MVP
+### 4. Wire Menu Actions to React
 
-Only for later versions, do not implement now:
+* Every menu item must call the same handlers currently used by:
 
-* File tree sidebar and recent files.
-* Export to PDF or other formats.
-* MathJax, diagrams, tables.
-* Focus mode and typewriter mode.
-* Custom themes and CSS editor.
-* Multiple tabs or split views.
-* Plugins or extensions.
+    * Keyboard shortcuts
+    * Buttons
+* There must never be duplicate logic
 
-Keep this MVP narrow and focused on a single document, single pane, Typora style editing experience.
+---
+
+## Acceptance Criteria for Agent 1
+
+All must be true:
+
+* TitleBar is fully removed
+* Window title updates correctly
+* macOS native menus exist
+* Menu actions trigger real app behavior
+* View → Toggle Status Bar works via menu
+* No duplicate business logic exists
+
+Only then Agent 2 may begin.
+
+---
+
+# AGENT 2 – Settings System and Persistence
+
+## Goal
+
+Allow users to personalize the editor and persist preferences across app restarts.
+
+---
+
+## Owns
+
+* `src/App.tsx`
+* New file: `src/settings.ts`
+* New file: `src/components/SettingsModal.tsx`
+* Tauri app config storage
+
+---
+
+## Settings Options (Mandatory)
+
+| Setting       | Type   | Default |
+|---------------|--------|---------|
+| Font Family   | Select | System  |
+| Font Size     | Number | 16px    |
+| Line Height   | Number | 1.6     |
+| Content Width | Number | 800px   |
+| Theme Mode    | Select | System  |
+
+---
+
+## Tasks
+
+### 1. Create Settings Modal
+
+* Appears from: **Paper → Settings**
+* Native macOS modal styling
+* Real-time preview of changes
+
+---
+
+### 2. Apply Settings Live to Editor
+
+Changing any setting must immediately:
+
+* Update CSS variables
+* Reflow the editor
+* Persist to storage
+
+---
+
+### 3. Persist Settings
+
+* Use:
+
+    * Tauri app config
+    * Or filesystem JSON under app data directory
+* Settings must persist across app restarts
+
+---
+
+### 4. Theme Control
+
+Allow:
+
+* Light
+* Dark
+* System
+
+System must follow `prefers-color-scheme`.
+
+---
+
+## Acceptance Criteria for Agent 2
+
+All must be true:
+
+* Settings modal opens from menu
+* Font family changes visually
+* Font size applies instantly
+* Line height applies instantly
+* Content width applies instantly
+* Theme switches correctly
+* All settings persist after restart
+
+Only then Agent 3 may begin.
+
+---
+
+# AGENT 3 – Visual Polish and Typography System
+
+## Goal
+
+Make Paper feel **luxurious, calm, and premium**, not like a web app inside a shell.
+
+---
+
+## Owns
+
+* `src/App.css`
+* Editor styles
+* Global typography styles
+
+---
+
+## Tasks
+
+### 1. Typography System
+
+* Default font stack tuned for writing
+* Headings properly scaled
+* Paragraph rhythm optimized
+* Code blocks refined
+
+---
+
+### 2. Spacing and Layout
+
+* Vertical breathing room
+* Proper paragraph separation
+* Comfortable reading width
+
+---
+
+### 3. Status Bar Visual Upgrade
+
+* Subtle background
+* Optional translucency
+* Monospaced metrics
+
+---
+
+### 4. Scroll Feel
+
+* Smooth scroll
+* No harsh jumps
+* Mac trackpad optimized behavior
+
+---
+
+## Acceptance Criteria for Agent 3
+
+All must be true:
+
+* Editor looks like a native writing tool
+* Typography feels balanced
+* Status bar looks integrated
+* No web-app visual artifacts remain
+* Light and dark themes both feel intentional
+
+---
+
+## 3. MVP 2 Final Acceptance Checklist
+
+Paper MVP 2 is only complete when:
+
+* No custom TitleBar exists
+* Window title reflects document state
+* All actions work from native menus
+* Status bar visibility is toggleable
+* Settings modal works
+* Fonts and layout are customizable
+* All preferences persist
+* App looks native and polished
+
+---
+
+## 4. Strict Non Goals for MVP 2
+
+Do not implement:
+
+* Tabs
+* Sidebar
+* Tables
+* PDF export
+* Focus mode
+* Cloud sync
+* Plugin system
+* Git integration
+* Collaboration
+
+---
+
+## 5. Naming This Phase Internally
+
+Recommended internal label:
+
+**Paper v0.2 – Native Polish Release**
