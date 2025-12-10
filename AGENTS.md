@@ -6,10 +6,10 @@ Build a cross platform desktop app using Rust and Tauri that feels similar to Ty
 
 Single pane, distraction free, What You See Is What You Mean markdown editing:
 
-* No separate preview window.
-* No explicit mode switcher.
-* Markdown syntax transforms into formatted content while typing, so the document looks like a clean rendered page.
-* Minimal chrome, focus on the text.
+- No separate preview window.
+- No explicit mode switcher.
+- Markdown syntax transforms into formatted content while typing, so the document looks like a clean rendered page.
+- Minimal chrome, focus on the text.
 
 MVP only, so we limit features to the core experience.
 
@@ -27,70 +27,70 @@ Paper MVP 1 delivered a complete **functional foundation** for a single-document
 
 ### ✅ Core Editing System
 
-* Single-pane **WYSIWYM Markdown editor** implemented.
-* No preview mode and no mode switching.
-* Live rendering of:
+- Single-pane **WYSIWYM Markdown editor** implemented.
+- No preview mode and no mode switching.
+- Live rendering of:
+  - Headings
+  - Bold, italic
+  - Lists (ordered and unordered)
+  - Blockquotes
+  - Inline code and code blocks
+  - Links
 
-    * Headings
-    * Bold, italic
-    * Lists (ordered and unordered)
-    * Blockquotes
-    * Inline code and code blocks
-    * Links
-* Editor exports and imports clean Markdown.
-* Word count tracking integrated.
+- Editor exports and imports clean Markdown.
+- Word count tracking integrated.
 
 ### ✅ File System Integration
 
-* Fully working:
+- Fully working:
+  - New
+  - Open
+  - Save
+  - Save As
 
-    * New
-    * Open
-    * Save
-    * Save As
-* UTF-8 safe file read and write via Rust + Tauri commands.
-* Native OS file dialogs.
-* Safe error handling with no panics.
+- UTF-8 safe file read and write via Rust + Tauri commands.
+- Native OS file dialogs.
+- Safe error handling with no panics.
 
 ### ✅ Dirty State Protection
 
-* Real dirty state detection.
-* Confirmation dialogs on:
+- Real dirty state detection.
+- Confirmation dialogs on:
+  - New file with unsaved changes
+  - Open with unsaved changes
+  - Window close with unsaved changes
 
-    * New file with unsaved changes
-    * Open with unsaved changes
-    * Window close with unsaved changes
-* `lastSavedContent` tracking to prevent false dirty states.
+- `lastSavedContent` tracking to prevent false dirty states.
 
 ### ✅ App Layout
 
-* Three-part layout:
+- Three-part layout:
+  - TitleBar (document name + dirty indicator)
+  - Editor (main content)
+  - StatusBar (word count)
 
-    * TitleBar (document name + dirty indicator)
-    * Editor (main content)
-    * StatusBar (word count)
-* Single window only.
-* One document at a time.
+- Single window only.
+- One document at a time.
 
 ### ✅ Keyboard Shortcuts
 
-* Cmd/Ctrl + N → New
-* Cmd/Ctrl + O → Open
-* Cmd/Ctrl + S → Save
-* Cmd/Ctrl + Shift + S → Save As
+- Cmd/Ctrl + N → New
+- Cmd/Ctrl + O → Open
+- Cmd/Ctrl + S → Save
+- Cmd/Ctrl + Shift + S → Save As
 
 ### ✅ Theming (Basic)
 
-* Light and Dark themes implemented.
-* System theme support via `prefers-color-scheme`.
+- Light and Dark themes implemented.
+- System theme support via `prefers-color-scheme`.
 
 ### ✅ Cross-Platform Readiness
 
-* Builds and runs using:
+- Builds and runs using:
+  - `tauri dev`
+  - `tauri build`
 
-    * `tauri dev`
-    * `tauri build`
-* macOS, Windows, and Linux supported at the infrastructure level.
+- macOS, Windows, and Linux supported at the infrastructure level.
 
 ---
 
@@ -98,23 +98,23 @@ Paper MVP 1 delivered a complete **functional foundation** for a single-document
 
 MVP 1 intentionally avoided:
 
-* Tabs
-* Sidebars
-* Settings
-* Menus
-* Tables
-* Export formats
-* Focus modes
-* Plugins
-* Custom themes
+- Tabs
+- Sidebars
+- Settings
+- Menus
+- Tables
+- Export formats
+- Focus modes
+- Plugins
+- Custom themes
 
 It established a **correct, safe, single-document Markdown writing engine** as the base for all future refinement.
 
 ---
 
-#  MVP 2
+# MVP 2
 
-*UI, Aesthetics, Native Menus, and Personalization*
+_UI, Aesthetics, Native Menus, and Personalization_
 
 This phase assumes **MVP 1 is fully complete and stable**.
 MVP 2 introduces **native OS integration and visual refinement only**.
@@ -126,11 +126,11 @@ No new core editing or file logic is permitted in this phase.
 
 Paper MVP 2 focuses on:
 
-* Removing custom chrome
-* Using **native OS menus**
-* Improving **visual calm and polish**
-* Adding a **Settings system for personalization**
-* Making the app feel like a true macOS-first writing tool
+- Removing custom chrome
+- Using **native OS menus**
+- Improving **visual calm and polish**
+- Adding a **Settings system for personalization**
+- Making the app feel like a true macOS-first writing tool
 
 No productivity features are added in this phase.
 Only **presentation, customization, and OS correctness**.
@@ -140,30 +140,25 @@ Only **presentation, customization, and OS correctness**.
 ## 1. High Level Changes from MVP 1
 
 1. **TitleBar component is removed**
-
-    * `Untitled.md` and dirty indicator move to the **native window title**
-    * All file actions move to **macOS menu bar**
+   - `Untitled.md` and dirty indicator move to the **native window title**
+   - All file actions move to **macOS menu bar**
 
 2. **StatusBar becomes toggleable**
-
-    * New menu option: **View → Toggle Status Bar**
+   - New menu option: **View → Toggle Status Bar**
 
 3. **New Settings system**
-
-    * New menu: **Paper → Settings**
-    * User can customize:
-
-        * Editor font family
-        * Editor font size
-        * Line height
-        * Content width
-        * Theme mode: Light, Dark, System
+   - New menu: **Paper → Settings**
+   - User can customize:
+     - Editor font family
+     - Editor font size
+     - Line height
+     - Content width
+     - Theme mode: Light, Dark, System
 
 4. **Visual refinement**
-
-    * Typography upgraded
-    * Better spacing
-    * Platform-native look and feel
+   - Typography upgraded
+   - Better spacing
+   - Platform-native look and feel
 
 ---
 
@@ -189,10 +184,10 @@ Replace all custom window controls with **true macOS native menus** and move the
 
 ## Owns
 
-* `src-tauri/src/main.rs`
-* `src-tauri/tauri.conf.json`
-* `src/App.tsx`
-* Removal of `TitleBar.tsx`
+- `src-tauri/src/main.rs`
+- `src-tauri/tauri.conf.json`
+- `src/App.tsx`
+- Removal of `TitleBar.tsx`
 
 ---
 
@@ -200,24 +195,23 @@ Replace all custom window controls with **true macOS native menus** and move the
 
 ### 1. Remove Custom TitleBar
 
-* Delete `<TitleBar />` from `App.tsx`
-* Delete the `TitleBar.tsx` component entirely
-* Remove all related CSS
+- Delete `<TitleBar />` from `App.tsx`
+- Delete the `TitleBar.tsx` component entirely
+- Remove all related CSS
 
 ---
 
 ### 2. Move Document Title to Native Window Title
 
-* When:
-
-    * New file → window title becomes `Untitled.md`
-    * File opened → window title becomes actual filename
-    * Dirty state → append `•` to title
+- When:
+  - New file → window title becomes `Untitled.md`
+  - File opened → window title becomes actual filename
+  - Dirty state → append `•` to title
 
 This must be driven from:
 
-* Tauri `Window::set_title`
-* Synced from React via a Tauri command
+- Tauri `Window::set_title`
+- Synced from React via a Tauri command
 
 ---
 
@@ -227,41 +221,41 @@ Menus to implement:
 
 #### Paper (App Menu)
 
-* About Paper
-* Settings
-* Hide Paper
-* Quit Paper
+- About Paper
+- Settings
+- Hide Paper
+- Quit Paper
 
 #### File
 
-* New
-* Open
-* Save
-* Save As
-* Close
+- New
+- Open
+- Save
+- Save As
+- Close
 
 #### Edit
 
-* Undo
-* Redo
-* Cut
-* Copy
-* Paste
-* Select All
+- Undo
+- Redo
+- Cut
+- Copy
+- Paste
+- Select All
 
 #### View
 
-* Toggle Status Bar
+- Toggle Status Bar
 
 ---
 
 ### 4. Wire Menu Actions to React
 
-* Every menu item must call the same handlers currently used by:
+- Every menu item must call the same handlers currently used by:
+  - Keyboard shortcuts
+  - Buttons
 
-    * Keyboard shortcuts
-    * Buttons
-* There must never be duplicate logic
+- There must never be duplicate logic
 
 ---
 
@@ -269,12 +263,12 @@ Menus to implement:
 
 All must be true:
 
-* TitleBar is fully removed
-* Window title updates correctly
-* macOS native menus exist
-* Menu actions trigger real app behavior
-* View → Toggle Status Bar works via menu
-* No duplicate business logic exists
+- TitleBar is fully removed
+- Window title updates correctly
+- macOS native menus exist
+- Menu actions trigger real app behavior
+- View → Toggle Status Bar works via menu
+- No duplicate business logic exists
 
 Only then Agent 2 may begin.
 
@@ -290,17 +284,17 @@ Allow users to personalize the editor and persist preferences across app restart
 
 ## Owns
 
-* `src/App.tsx`
-* New file: `src/settings.ts`
-* New file: `src/components/SettingsModal.tsx`
-* Tauri app config storage
+- `src/App.tsx`
+- New file: `src/settings.ts`
+- New file: `src/components/SettingsModal.tsx`
+- Tauri app config storage
 
 ---
 
 ## Settings Options (Mandatory)
 
 | Setting       | Type   | Default |
-|---------------|--------|---------|
+| ------------- | ------ | ------- |
 | Font Family   | Select | System  |
 | Font Size     | Number | 16px    |
 | Line Height   | Number | 1.6     |
@@ -313,9 +307,9 @@ Allow users to personalize the editor and persist preferences across app restart
 
 ### 1. Create Settings Modal
 
-* Appears from: **Paper → Settings**
-* Native macOS modal styling
-* Real-time preview of changes
+- Appears from: **Paper → Settings**
+- Native macOS modal styling
+- Real-time preview of changes
 
 ---
 
@@ -323,19 +317,19 @@ Allow users to personalize the editor and persist preferences across app restart
 
 Changing any setting must immediately:
 
-* Update CSS variables
-* Reflow the editor
-* Persist to storage
+- Update CSS variables
+- Reflow the editor
+- Persist to storage
 
 ---
 
 ### 3. Persist Settings
 
-* Use:
+- Use:
+  - Tauri app config
+  - Or filesystem JSON under app data directory
 
-    * Tauri app config
-    * Or filesystem JSON under app data directory
-* Settings must persist across app restarts
+- Settings must persist across app restarts
 
 ---
 
@@ -343,9 +337,9 @@ Changing any setting must immediately:
 
 Allow:
 
-* Light
-* Dark
-* System
+- Light
+- Dark
+- System
 
 System must follow `prefers-color-scheme`.
 
@@ -355,13 +349,13 @@ System must follow `prefers-color-scheme`.
 
 All must be true:
 
-* Settings modal opens from menu
-* Font family changes visually
-* Font size applies instantly
-* Line height applies instantly
-* Content width applies instantly
-* Theme switches correctly
-* All settings persist after restart
+- Settings modal opens from menu
+- Font family changes visually
+- Font size applies instantly
+- Line height applies instantly
+- Content width applies instantly
+- Theme switches correctly
+- All settings persist after restart
 
 Only then Agent 3 may begin.
 
@@ -377,9 +371,9 @@ Make Paper feel **luxurious, calm, and premium**, not like a web app inside a sh
 
 ## Owns
 
-* `src/App.css`
-* Editor styles
-* Global typography styles
+- `src/App.css`
+- Editor styles
+- Global typography styles
 
 ---
 
@@ -387,26 +381,27 @@ Make Paper feel **luxurious, calm, and premium**, not like a web app inside a sh
 
 ### 1. Typography System
 
-* Default font stack tuned for writing
-* Headings properly scaled
-* Paragraph rhythm optimized
-* Code blocks refined
+- Default font stack tuned for writing
+- Headings properly scaled
+- Paragraph rhythm optimized
+- Code blocks refined
 
 ---
 
 ### 2. Spacing and Layout
 
-* Vertical breathing room
-* Proper paragraph separation
-* Comfortable reading width
+- Vertical breathing room
+- Proper paragraph separation
+- Comfortable reading width
+- Disable text selection of UI elements
 
 ---
 
 ### 3. Status Bar Visual Upgrade
 
-* Subtle background
-* Optional translucency
-* Monospaced metrics
+- Subtle background
+- Optional translucency
+- Monospaced metrics
 
 ---
 
@@ -414,11 +409,12 @@ Make Paper feel **luxurious, calm, and premium**, not like a web app inside a sh
 
 All must be true:
 
-* Editor looks like a native writing tool
-* Typography feels balanced
-* Status bar looks integrated
-* No web-app visual artifacts remain
-* Light and dark themes both feel intentional
+- Editor looks like a native writing tool
+- Typography feels balanced
+- Status bar looks integrated
+- No web-app visual artifacts remain
+- Light and dark themes both feel intentional
+- Do not change any scrolling behavior, use the native scrolling provided by the OS
 
 ---
 
@@ -426,14 +422,14 @@ All must be true:
 
 Paper MVP 2 is only complete when:
 
-* No custom TitleBar exists
-* Window title reflects document state
-* All actions work from native menus
-* Status bar visibility is toggleable
-* Settings modal works
-* Fonts and layout are customizable
-* All preferences persist
-* App looks native and polished
+- No custom TitleBar exists
+- Window title reflects document state
+- All actions work from native menus
+- Status bar visibility is toggleable
+- Settings modal works
+- Fonts and layout are customizable
+- All preferences persist
+- App looks native and polished
 
 ---
 
@@ -441,15 +437,15 @@ Paper MVP 2 is only complete when:
 
 Do not implement:
 
-* Tabs
-* Sidebar
-* Tables
-* PDF export
-* Focus mode
-* Cloud sync
-* Plugin system
-* Git integration
-* Collaboration
+- Tabs
+- Sidebar
+- Tables
+- PDF export
+- Focus mode
+- Cloud sync
+- Plugin system
+- Git integration
+- Collaboration
 
 ---
 
