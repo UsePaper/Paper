@@ -25,3 +25,10 @@
 - Implemented native macOS menus (Paper, File, Edit, View) in `src-tauri/src/lib.rs`.
 - Wired native menu events to React application logic using `listen`.
 - Removed duplicate keyboard shortcut listeners in React, relying on native menu accelerators.
+
+#### 2025 12 10 – Agent 2 (Settings System and Persistence)
+- Created `SettingsModal` component with instant preview for font, size, line-height, width, and theme.
+- Implemented `src/settings.ts` for type-safe settings management and default values.
+- Wired persistence via Tauri commands to load settings on launch and save on modification.
+- Connected `App.tsx` to apply settings dynamically via CSS variables for real-time visual updates.
+- Added system-aware theme switching logic.
