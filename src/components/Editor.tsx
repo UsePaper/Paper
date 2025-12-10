@@ -8,6 +8,7 @@ type Props = {
   value: string;
   onChange: (markdown: string) => void;
   onStatsChange?: (stats: { wordCount: number }) => void;
+  blurSignal?: number;
 };
 
 const countWords = (text: string) => {
@@ -16,7 +17,7 @@ const countWords = (text: string) => {
   return trimmed.split(/\s+/).length;
 };
 
-function Editor({ value, onChange, onStatsChange }: Props) {
+function Editor({ value, onChange, onStatsChange, blurSignal }: Props) {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -63,6 +64,11 @@ function Editor({ value, onChange, onStatsChange }: Props) {
     if (!editor || !onStatsChange) return;
     onStatsChange({ wordCount: countWords(editor.getText()) });
   }, [editor, onStatsChange, value]);
+
+  useEffect(() => {
+    if (!editor || !blurSignal) return;
+    editor.commands.blur();
+  }, [editor, blurSignal]);
 
   if (!editor) {
     return <div className="editor-loading">Loading editor…</div>;

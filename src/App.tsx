@@ -30,6 +30,7 @@ function App() {
   const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const lastSavedContent = useRef("");
+  const [blurEditorSignal, setBlurEditorSignal] = useState(0);
   const [systemTheme, setSystemTheme] = useState<"light" | "dark">(() => {
     if (typeof window === "undefined") return "light";
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -155,6 +156,7 @@ function App() {
       const fileContent = (await invoke<string>("read_file", { path: selectedPath })) as string;
       setContent(fileContent);
       markClean(fileContent, selectedPath);
+      setBlurEditorSignal(Date.now());
     } catch (error) {
       alert(`Failed to open file: ${error}`);
     }
@@ -217,7 +219,12 @@ function App() {
   return (
     <div className="app-shell">
       <div className="editor-area">
-        <Editor value={content} onChange={handleContentChange} onStatsChange={handleStatsChange} />
+        <Editor
+          value={content}
+          onChange={handleContentChange}
+          onStatsChange={handleStatsChange}
+          blurSignal={blurEditorSignal}
+        />
       </div>
       {showStatusBar && <StatusBar wordCount={wordCount} />}
       <SettingsModal open={settingsOpen} settings={settings} onClose={() => setSettingsOpen(false)} onChange={setSettings} />
