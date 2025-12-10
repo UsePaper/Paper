@@ -142,7 +142,6 @@
 .editor-surface {
   width: 100%;
   max-width: var(--editor-content-width);
-  min-height: 100vh; /* Fill full viewport height */
   background-color: var(--bg-paper);
   padding: 48px 60px;
   margin: 0 auto;
