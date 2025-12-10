@@ -62,7 +62,7 @@ function Editor({ value, onChange, onStatsChange }: Props) {
   useEffect(() => {
     if (!editor || !onStatsChange) return;
     onStatsChange({ wordCount: countWords(editor.getText()) });
-  }, [editor, onStatsChange]);
+  }, [editor, onStatsChange, value]);
 
   if (!editor) {
     return <div className="editor-loading">Loading editor…</div>;
