@@ -11,3 +11,10 @@
 - Integrated TipTap markdown editor with placeholder, markdown sync, and word count reporting.
 - Added global and theme styling for light/dark presentation and minimal chrome; wired theme preference detection.
 - Declared TipTap dependencies in package.json.
+
+#### 2025 12 10 – Theming and polish specialist
+- Refined `src/styles/theme.css` with a cleaner, Typora-inspired variable set and typography.
+- Updated `src/styles/global.css` to be a minimal reset using the new theme variables.
+- Polished `StatusBar` to be minimal (removed redundant filename display).
+- Adjusted `TitleBar` styling to function as a document header, removing conflicting window drag regions.
+- Added support for printing, link styling, and better spacing in the editor.

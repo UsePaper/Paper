@@ -159,7 +159,7 @@ function App() {
       <div className="editor-area">
         <Editor value={content} onChange={handleContentChange} onStatsChange={handleStatsChange} />
       </div>
-      <StatusBar wordCount={wordCount} fileName={documentTitle} />
+      <StatusBar wordCount={wordCount} />
     </div>
   );
 }
