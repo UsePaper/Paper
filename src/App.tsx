@@ -163,16 +163,16 @@ function App() {
     const unlisten = listen<string>("menu-event", (event) => {
       switch (event.payload) {
         case "new":
-          handleNew();
+          handleNew().then(_ => {});
           break;
         case "open":
-          handleOpen();
+          handleOpen().then(_ => {});
           break;
         case "save":
-          handleSave();
+          handleSave().then(_ => {});
           break;
         case "save_as":
-          handleSaveAs();
+          handleSaveAs().then(_ => {});
           break;
         case "toggle_status_bar":
           setShowStatusBar((prev) => !prev);
@@ -190,7 +190,7 @@ function App() {
 
   useEffect(() => {
     if (!hasLoadedSettings) return;
-    persistSettings(settings);
+    persistSettings(settings).then(_ => {});
   }, [settings, hasLoadedSettings]);
 
   return (
