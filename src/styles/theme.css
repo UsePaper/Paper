@@ -154,7 +154,7 @@
 
 /* Paper effect only in light mode mostly */
 .theme-light .editor-surface {
-  box-shadow: var(--shadow-paper); /* Optional: Enable for card look */
+  /* box-shadow: var(--shadow-paper); Optional: Enable for card look */
 }
 
 .editor-content {
