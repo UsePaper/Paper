@@ -1,9 +1,11 @@
-import {useCallback, useEffect, useRef, useState} from "react";
-import {invoke} from "@tauri-apps/api/core";
-import {getCurrentWindow} from "@tauri-apps/api/window";
-import {listen} from "@tauri-apps/api/event";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
+import { getCurrentWindow } from "@tauri-apps/api/window";
+import { listen } from "@tauri-apps/api/event";
 import Editor from "./components/Editor";
 import StatusBar from "./components/StatusBar";
+import SettingsModal from "./components/SettingsModal";
+import { defaultSettings, loadSavedSettings, persistSettings, Settings } from "./settings";
 
 type EditorStats = {
   wordCount: number;
@@ -24,23 +26,49 @@ function App() {
   const [isDirty, setIsDirty] = useState(false);
   const [wordCount, setWordCount] = useState(0);
   const [showStatusBar, setShowStatusBar] = useState(true);
+  const [settings, setSettings] = useState<Settings>(defaultSettings);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const lastSavedContent = useRef("");
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
+  const [systemTheme, setSystemTheme] = useState<"light" | "dark">(() => {
     if (typeof window === "undefined") return "light";
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   });
+  const [hasLoadedSettings, setHasLoadedSettings] = useState(false);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const listener = (event: MediaQueryListEvent) => setTheme(event.matches ? "dark" : "light");
+    const listener = (event: MediaQueryListEvent) => setSystemTheme(event.matches ? "dark" : "light");
     media.addEventListener("change", listener);
     return () => media.removeEventListener("change", listener);
   }, []);
 
   useEffect(() => {
+    let mounted = true;
+    loadSavedSettings().then((loaded) => {
+      if (!mounted) return;
+      setSettings(loaded);
+      setHasLoadedSettings(true);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const fontFamily = settings.fontFamily === "System" ? "var(--font-body)" : settings.fontFamily;
+    root.style.setProperty("--editor-font-family", fontFamily);
+    root.style.setProperty("--editor-font-size", `${settings.fontSize}px`);
+    root.style.setProperty("--editor-line-height", `${settings.lineHeight}`);
+    root.style.setProperty("--editor-content-width", `${settings.contentWidth}px`);
+  }, [settings]);
+
+  const appliedTheme = settings.themeMode === "system" ? systemTheme : settings.themeMode;
+
+  useEffect(() => {
     document.documentElement.classList.remove("theme-light", "theme-dark");
-    document.documentElement.classList.add(theme === "dark" ? "theme-dark" : "theme-light");
-  }, [theme]);
+    document.documentElement.classList.add(appliedTheme === "dark" ? "theme-dark" : "theme-light");
+  }, [appliedTheme]);
 
   // Update native window title
   useEffect(() => {
@@ -150,7 +178,7 @@ function App() {
           setShowStatusBar((prev) => !prev);
           break;
         case "settings":
-          console.log("Settings clicked");
+          setSettingsOpen(true);
           break;
       }
     });
@@ -160,12 +188,18 @@ function App() {
     };
   }, [handleNew, handleOpen, handleSave, handleSaveAs]);
 
+  useEffect(() => {
+    if (!hasLoadedSettings) return;
+    persistSettings(settings);
+  }, [settings, hasLoadedSettings]);
+
   return (
     <div className="app-shell">
       <div className="editor-area">
         <Editor value={content} onChange={handleContentChange} onStatsChange={handleStatsChange} />
       </div>
       {showStatusBar && <StatusBar wordCount={wordCount} />}
+      <SettingsModal open={settingsOpen} settings={settings} onClose={() => setSettingsOpen(false)} onChange={setSettings} />
     </div>
   );
 }
