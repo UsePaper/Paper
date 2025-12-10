@@ -382,26 +382,26 @@ Make Paper feel **luxurious, calm, and premium**, not like a web app inside a sh
 ### 1. Typography System
 
 - Default font stack tuned for writing
-- Headings properly scaled
-- Paragraph rhythm optimized
-- Code blocks refined
+- Headings properly scaled (don't change if it's good already)
+- Paragraph rhythm optimized (don't change if it's good already)
+- Code blocks refined (don't change if it's good already)
 
 ---
 
 ### 2. Spacing and Layout
 
-- Vertical breathing room
-- Proper paragraph separation
-- Comfortable reading width
+- Vertical breathing room (don't change if it's good already)
+- Proper paragraph separation (don't change if it's good already)
+- Comfortable reading width (don't change if it's good already)
 - Disable text selection of UI elements
 
 ---
 
 ### 3. Status Bar Visual Upgrade
 
-- Subtle background
-- Optional translucency
-- Monospaced metrics
+- Subtle background (don't change if it's good already)
+- Optional translucency (don't change if it's good already)
+- Monospaced metrics (don't change if it's good already)
 
 ---
 
