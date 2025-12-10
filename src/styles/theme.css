@@ -53,57 +53,7 @@
 }
 
 /* --- Title Bar --- */
-
-.title-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 48px;
-  padding: 0 16px;
-  user-select: none;
-}
-
-.title-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-}
-
-.title-text {
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.dirty-indicator {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: var(--accent-color);
-  opacity: 0.8;
-}
-
-.title-actions {
-  display: flex;
-  gap: 4px;
-}
-
-.title-actions button {
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  padding: 4px 8px;
-  font-size: 0.85rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.title-actions button:hover {
-  background-color: var(--border-subtle);
-  color: var(--text-primary);
-}
+/* Removed in MVP 2 */
 
 /* --- Status Bar --- */
 

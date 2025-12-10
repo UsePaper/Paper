@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "paper",
+  "productName": "Paper",
   "version": "0.1.0",
   "identifier": "com.joker666.paper",
   "build": {
@@ -13,9 +13,9 @@
     "windows": [
       {
         "label": "main",
-        "title": "paper",
-        "width": 800,
-        "height": 600
+        "title": "Paper",
+        "width": 750,
+        "height": 750
       }
     ],
     "security": {

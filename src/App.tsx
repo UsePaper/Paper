@@ -1,8 +1,9 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import {invoke} from "@tauri-apps/api/core";
+import {getCurrentWindow} from "@tauri-apps/api/window";
+import {listen} from "@tauri-apps/api/event";
 import Editor from "./components/Editor";
 import StatusBar from "./components/StatusBar";
-import TitleBar from "./components/TitleBar";
 
 type EditorStats = {
   wordCount: number;
@@ -22,6 +23,7 @@ function App() {
   const [documentTitle, setDocumentTitle] = useState<string>(UNTITLED);
   const [isDirty, setIsDirty] = useState(false);
   const [wordCount, setWordCount] = useState(0);
+  const [showStatusBar, setShowStatusBar] = useState(true);
   const lastSavedContent = useRef("");
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof window === "undefined") return "light";
@@ -39,6 +41,12 @@ function App() {
     document.documentElement.classList.remove("theme-light", "theme-dark");
     document.documentElement.classList.add(theme === "dark" ? "theme-dark" : "theme-light");
   }, [theme]);
+
+  // Update native window title
+  useEffect(() => {
+    const title = isDirty ? `${documentTitle} •` : documentTitle;
+    getCurrentWindow().setTitle(title);
+  }, [documentTitle, isDirty]);
 
   const markClean = useCallback(
     (newContent: string, filePath: string | null) => {
@@ -124,42 +132,40 @@ function App() {
   }, [confirmDirtyFlow, markClean]);
 
   useEffect(() => {
-    const handler = (event: KeyboardEvent) => {
-      const modifier = event.metaKey || event.ctrlKey;
-      if (!modifier) return;
-      const key = event.key.toLowerCase();
-      if (key === "s" && event.shiftKey) {
-        event.preventDefault();
-        handleSaveAs().then(_ => {});
-      } else if (key === "s") {
-        event.preventDefault();
-        handleSave().then(_ => {});
-      } else if (key === "o") {
-        event.preventDefault();
-        handleOpen().then(_ => {});
-      } else if (key === "n") {
-        event.preventDefault();
-        handleNew().then(_ => {});
+    const unlisten = listen<string>("menu-event", (event) => {
+      switch (event.payload) {
+        case "new":
+          handleNew();
+          break;
+        case "open":
+          handleOpen();
+          break;
+        case "save":
+          handleSave();
+          break;
+        case "save_as":
+          handleSaveAs();
+          break;
+        case "toggle_status_bar":
+          setShowStatusBar((prev) => !prev);
+          break;
+        case "settings":
+          console.log("Settings clicked");
+          break;
       }
+    });
+
+    return () => {
+      unlisten.then((f) => f());
     };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
   }, [handleNew, handleOpen, handleSave, handleSaveAs]);
 
   return (
     <div className="app-shell">
-      <TitleBar
-        title={documentTitle}
-        isDirty={isDirty}
-        onNew={handleNew}
-        onOpen={handleOpen}
-        onSave={handleSave}
-        onSaveAs={handleSaveAs}
-      />
       <div className="editor-area">
         <Editor value={content} onChange={handleContentChange} onStatsChange={handleStatsChange} />
       </div>
-      <StatusBar wordCount={wordCount} />
+      {showStatusBar && <StatusBar wordCount={wordCount} />}
     </div>
   );
 }

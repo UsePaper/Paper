@@ -18,3 +18,10 @@
 - Polished `StatusBar` to be minimal (removed redundant filename display).
 - Adjusted `TitleBar` styling to function as a document header, removing conflicting window drag regions.
 - Added support for printing, link styling, and better spacing in the editor.
+
+#### 2025 12 10 – Agent 1 (Native Menu and Window Integration)
+- Removed custom `TitleBar` component and styles for a native look.
+- Implemented logic to sync document title (and dirty state) to the native window title.
+- Implemented native macOS menus (Paper, File, Edit, View) in `src-tauri/src/lib.rs`.
+- Wired native menu events to React application logic using `listen`.
+- Removed duplicate keyboard shortcut listeners in React, relying on native menu accelerators.
