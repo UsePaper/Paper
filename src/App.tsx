@@ -45,7 +45,7 @@ function App() {
   // Update native window title
   useEffect(() => {
     const title = isDirty ? `${documentTitle} •` : documentTitle;
-    getCurrentWindow().setTitle(title);
+    getCurrentWindow().setTitle(title).then(_ => {});
   }, [documentTitle, isDirty]);
 
   const markClean = useCallback(

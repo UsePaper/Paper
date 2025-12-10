@@ -34,7 +34,9 @@ function Editor({ value, onChange, onStatsChange }: Props) {
         placeholder: "Start writing…",
       }),
     ],
-    content: value,
+    onCreate: ({ editor }) => {
+      editor.commands.setContent(value, { emitUpdate: false, contentType: "markdown" });
+    },
     onUpdate: ({ editor: tiptap }) => {
       const markdown = tiptap.getMarkdown();
       onChange(markdown);
@@ -53,7 +55,7 @@ function Editor({ value, onChange, onStatsChange }: Props) {
     if (!editor) return;
     const currentMarkdown = editor.getMarkdown();
     if (value !== currentMarkdown) {
-      editor.commands.setContent(value, { emitUpdate: false });
+      editor.commands.setContent(value, { emitUpdate: false, contentType: "markdown" });
     }
   }, [editor, value]);
 
