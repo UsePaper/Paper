@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { confirm } from '@tauri-apps/plugin-dialog';
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { listen } from "@tauri-apps/api/event";
 import Editor from "./components/Editor";
@@ -192,6 +193,24 @@ function App() {
     if (!hasLoadedSettings) return;
     persistSettings(settings).then(_ => {});
   }, [settings, hasLoadedSettings]);
+
+  useEffect(() => {
+    const window = getCurrentWindow();
+    const unlisten = window.onCloseRequested(async (event) => {
+      if (!isDirty) return;
+      const shouldQuit = await confirm("You have unsaved changes. Quit without saving?", {
+        title: "Unsaved changes",
+        kind: "warning",
+      });
+      if (!shouldQuit) {
+        event.preventDefault();
+      }
+    });
+
+    return () => {
+      unlisten.then((f) => f());
+    };
+  }, [isDirty]);
 
   return (
     <div className="app-shell">

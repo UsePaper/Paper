@@ -32,3 +32,6 @@
 - Wired persistence via Tauri commands to load settings on launch and save on modification.
 - Connected `App.tsx` to apply settings dynamically via CSS variables for real-time visual updates.
 - Added system-aware theme switching logic.
+
+#### 2025 12 11 – Codex
+- Added close-request guard in `src/App.tsx` that prompts before quitting when there are unsaved changes.

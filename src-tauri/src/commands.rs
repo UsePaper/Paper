@@ -71,9 +71,10 @@ pub fn load_settings(app: AppHandle) -> Result<Option<StoredSettings>, String> {
         return Ok(None);
     }
 
-    let contents = fs::read_to_string(&path).map_err(|err| format!("Failed to read settings: {err}"))?;
-    let parsed: StoredSettings =
-        serde_json::from_str(&contents).map_err(|err| format!("Failed to parse settings: {err}"))?;
+    let contents =
+        fs::read_to_string(&path).map_err(|err| format!("Failed to read settings: {err}"))?;
+    let parsed: StoredSettings = serde_json::from_str(&contents)
+        .map_err(|err| format!("Failed to parse settings: {err}"))?;
     Ok(Some(parsed))
 }
 
@@ -81,8 +82,8 @@ pub fn load_settings(app: AppHandle) -> Result<Option<StoredSettings>, String> {
 #[tauri::command]
 pub fn save_settings(app: AppHandle, settings: StoredSettings) -> Result<(), String> {
     let path = settings_path(&app)?;
-    let serialized =
-        serde_json::to_string_pretty(&settings).map_err(|err| format!("Failed to serialize settings: {err}"))?;
+    let serialized = serde_json::to_string_pretty(&settings)
+        .map_err(|err| format!("Failed to serialize settings: {err}"))?;
     fs::write(&path, serialized).map_err(|err| format!("Failed to write settings: {err}"))?;
     Ok(())
 }
