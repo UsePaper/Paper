@@ -13,7 +13,12 @@
   --panel-bg: #ffffff;
   --panel-border: #d0d7de;
   --overlay-backdrop: rgba(0, 0, 0, 0.18);
-  --bg-status-bar: rgba(253, 253, 253, 0.8); /* Semi-transparent version of --bg-app */
+  --bg-status-bar: rgba(
+    253,
+    253,
+    253,
+    0.8
+  ); /* Semi-transparent version of --bg-app */
 
   --font-body:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif,
@@ -46,7 +51,12 @@
   --panel-bg: #1f1f1f;
   --panel-border: #2c2c2c;
   --overlay-backdrop: rgba(0, 0, 0, 0.35);
-  --bg-status-bar: rgba(30, 30, 30, 0.8); /* Semi-transparent version of --bg-app */
+  --bg-status-bar: rgba(
+    30,
+    30,
+    30,
+    0.8
+  ); /* Semi-transparent version of --bg-app */
 
   /* Settings UI Variables (New) */
   --bg-modal: #2c2c2e;
@@ -82,7 +92,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--bg-app);
+  background-color: var(--bg-paper); /* Match editor background */
   color: var(--text-primary);
   transition:
     background-color 0.3s ease,
@@ -105,8 +115,7 @@
   padding: 0 16px;
   font-size: 0.75rem;
   color: var(--text-tertiary);
-  background-color: var(--bg-status-bar); /* Use the new translucent variable */
-  backdrop-filter: blur(8px); /* Frosted glass effect */
+  background-color: var(--bg-paper); /* Match editor background */
   border-top: 1px solid transparent; /* Subtle or none */
   transition:
     background-color 0.3s ease,
