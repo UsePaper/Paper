@@ -36,7 +36,7 @@ function Editor({ value, onChange, onStatsChange }: Props) {
     ],
     content: value,
     onUpdate: ({ editor: tiptap }) => {
-      const markdown = (tiptap.storage.markdown as any).getMarkdown();
+      const markdown = tiptap.getMarkdown();
       onChange(markdown);
       if (onStatsChange) {
         onStatsChange({ wordCount: countWords(tiptap.getText()) });
@@ -51,7 +51,7 @@ function Editor({ value, onChange, onStatsChange }: Props) {
 
   useEffect(() => {
     if (!editor) return;
-    const currentMarkdown = (editor.storage.markdown as any).getMarkdown();
+    const currentMarkdown = editor.getMarkdown();
     if (value !== currentMarkdown) {
       editor.commands.setContent(value, { emitUpdate: false });
     }
