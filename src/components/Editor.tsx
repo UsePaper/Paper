@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Markdown } from '@tiptap/markdown'
@@ -18,6 +18,7 @@ const countWords = (text: string) => {
 };
 
 function Editor({ value, onChange, onStatsChange, blurSignal }: Props) {
+  const contentRef = useRef<HTMLDivElement>(null);
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -70,13 +71,26 @@ function Editor({ value, onChange, onStatsChange, blurSignal }: Props) {
     editor.commands.blur();
   }, [editor, blurSignal]);
 
+  useEffect(() => {
+    if (!editor) return;
+    const handler = (event: MouseEvent) => {
+      if (!contentRef.current) return;
+      if (contentRef.current.contains(event.target as Node)) return;
+      editor.commands.blur();
+    };
+    document.addEventListener("mousedown", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  }, [editor]);
+
   if (!editor) {
     return <div className="editor-loading">Loading editor…</div>;
   }
 
   return (
-    <div className="editor-surface" onClick={() => editor.commands.focus()}>
-      <EditorContent editor={editor} />
+    <div className="editor-surface">
+      <EditorContent editor={editor} ref={contentRef} />
     </div>
   );
 }
