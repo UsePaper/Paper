@@ -115,7 +115,8 @@
   padding: 0 16px;
   font-size: 0.75rem;
   color: var(--text-tertiary);
-  background-color: var(--bg-paper); /* Match editor background */
+  background-color: var(--bg-status-bar); /* Use the new translucent variable */
+  backdrop-filter: blur(8px); /* Frosted glass effect */
   border-top: 1px solid transparent; /* Subtle or none */
   transition:
     background-color 0.3s ease,
