@@ -410,14 +410,6 @@ Make Paper feel **luxurious, calm, and premium**, not like a web app inside a sh
 
 ---
 
-### 4. Scroll Feel
-
-* Smooth scroll
-* No harsh jumps
-* Mac trackpad optimized behavior
-
----
-
 ## Acceptance Criteria for Agent 3
 
 All must be true:
