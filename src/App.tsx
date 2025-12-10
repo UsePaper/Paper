@@ -1,50 +1,166 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
-import "./App.css";
+import {useCallback, useEffect, useRef, useState} from "react";
+import {invoke} from "@tauri-apps/api/core";
+import Editor from "./components/Editor";
+import StatusBar from "./components/StatusBar";
+import TitleBar from "./components/TitleBar";
+
+type EditorStats = {
+  wordCount: number;
+};
+
+const UNTITLED = "Untitled.md";
+
+const getFileName = (path: string | null) => {
+  if (!path) return UNTITLED;
+  const segments = path.split(/[/\\]/);
+  return segments[segments.length - 1] || UNTITLED;
+};
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  const [content, setContent] = useState("");
+  const [currentFilePath, setCurrentFilePath] = useState<string | null>(null);
+  const [documentTitle, setDocumentTitle] = useState<string>(UNTITLED);
+  const [isDirty, setIsDirty] = useState(false);
+  const [wordCount, setWordCount] = useState(0);
+  const lastSavedContent = useRef("");
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    if (typeof window === "undefined") return "light";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const listener = (event: MediaQueryListEvent) => setTheme(event.matches ? "dark" : "light");
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.remove("theme-light", "theme-dark");
+    document.documentElement.classList.add(theme === "dark" ? "theme-dark" : "theme-light");
+  }, [theme]);
+
+  const markClean = useCallback(
+    (newContent: string, filePath: string | null) => {
+      lastSavedContent.current = newContent;
+      setIsDirty(false);
+      setCurrentFilePath(filePath);
+      setDocumentTitle(getFileName(filePath));
+    },
+    [setCurrentFilePath, setDocumentTitle],
+  );
+
+  const handleStatsChange = useCallback((stats: EditorStats) => {
+    setWordCount(stats.wordCount);
+  }, []);
+
+  const handleContentChange = useCallback((value: string) => {
+    setContent(value);
+    setIsDirty(value !== lastSavedContent.current);
+  }, []);
+
+  const writeFile = useCallback(
+    async (path: string) => {
+      try {
+        await invoke("write_file", { path, contents: content });
+        markClean(content, path);
+        return true;
+      } catch (error) {
+        alert(`Failed to save file: ${error}`);
+        return false;
+      }
+    },
+    [content, markClean],
+  );
+
+  const handleSaveAs = useCallback(async () => {
+    try {
+      const selectedPath = (await invoke<string | null>("show_save_dialog", {
+        default_file_name: getFileName(currentFilePath),
+      })) as string | null;
+      if (!selectedPath) return false;
+      return await writeFile(selectedPath);
+    } catch (error) {
+      alert(`Save As failed: ${error}`);
+      return false;
+    }
+  }, [currentFilePath, writeFile]);
+
+  const handleSave = useCallback(async () => {
+    if (!currentFilePath) {
+      return await handleSaveAs();
+    }
+    return await writeFile(currentFilePath);
+  }, [currentFilePath, handleSaveAs, writeFile]);
+
+  const confirmDirtyFlow = useCallback(async () => {
+    if (!isDirty) return true;
+    const save = window.confirm("You have unsaved changes. Save them?");
+    if (save) {
+      return await handleSave();
+    }
+    return window.confirm("Discard unsaved changes?");
+  }, [handleSave, isDirty]);
+
+  const handleNew = useCallback(async () => {
+    const proceed = await confirmDirtyFlow();
+    if (!proceed) return;
+    setContent("");
+    markClean("", null);
+  }, [confirmDirtyFlow, markClean]);
+
+  const handleOpen = useCallback(async () => {
+    const proceed = await confirmDirtyFlow();
+    if (!proceed) return;
+    try {
+      const selectedPath = (await invoke<string | null>("show_open_dialog")) as string | null;
+      if (!selectedPath) return;
+      const fileContent = (await invoke<string>("read_file", { path: selectedPath })) as string;
+      setContent(fileContent);
+      markClean(fileContent, selectedPath);
+    } catch (error) {
+      alert(`Failed to open file: ${error}`);
+    }
+  }, [confirmDirtyFlow, markClean]);
+
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => {
+      const modifier = event.metaKey || event.ctrlKey;
+      if (!modifier) return;
+      const key = event.key.toLowerCase();
+      if (key === "s" && event.shiftKey) {
+        event.preventDefault();
+        handleSaveAs().then(_ => {});
+      } else if (key === "s") {
+        event.preventDefault();
+        handleSave().then(_ => {});
+      } else if (key === "o") {
+        event.preventDefault();
+        handleOpen().then(_ => {});
+      } else if (key === "n") {
+        event.preventDefault();
+        handleNew().then(_ => {});
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [handleNew, handleOpen, handleSave, handleSaveAs]);
 
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
-
-      <div className="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="app-shell">
+      <TitleBar
+        title={documentTitle}
+        isDirty={isDirty}
+        onNew={handleNew}
+        onOpen={handleOpen}
+        onSave={handleSave}
+        onSaveAs={handleSaveAs}
+      />
+      <div className="editor-area">
+        <Editor value={content} onChange={handleContentChange} onStatsChange={handleStatsChange} />
       </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
+      <StatusBar wordCount={wordCount} fileName={documentTitle} />
+    </div>
   );
 }
 

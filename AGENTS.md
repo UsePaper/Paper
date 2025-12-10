@@ -626,10 +626,11 @@ Use `AGENTS_LOG.md` to record what each agent has done. For each significant cha
 Example entry format:
 
 ```text
-2025 12 09 – Architect and project bootstrapper
+#### 2025 12 09 – Architect and project bootstrapper
 - Created Tauri plus React template.
 - Configured tauri.conf.json with app name and identifier.
 - Added initial README with setup instructions.
+
 ```
 
 Respect agent ownership of files when possible. If one agent must touch another agent’s file, record that clearly in `AGENTS_LOG.md` with a short rationale.
