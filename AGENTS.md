@@ -466,3 +466,27 @@ Do not implement:
 Recommended internal label:
 
 **Paper v0.2 – Native Polish Release**
+
+## 6. Logging Rules
+
+All agents must append to:
+
+`AGENTS_LOG.md`
+
+Format:
+
+```text
+#### YYYY-MM-DD – Agent X
+- Summary of changes
+- Files modified
+- Key decisions
+```
+
+Example entry format:
+
+```text
+####  2025 12 09 – Architect and project bootstrapper
+- Created Tauri plus React template.
+- Configured tauri.conf.json with app name and identifier.
+- Added initial README with setup instructions.
+```
