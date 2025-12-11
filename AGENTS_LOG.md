@@ -64,3 +64,4 @@
 - Prevented the dark-mode launch flash by bootstrapping the theme class and background color from stored settings or system preference in `index.html` before React mounts.
 - Cached the selected and resolved theme in `localStorage` from `src/App.tsx` so subsequent launches can paint with the correct palette immediately.
 - Synced the native window/dialog theme to the resolved app theme using Tauri's `setTheme` when settings change, keeping chrome consistent.
+- Reset scroll to the top when opening a file by tracking the editor container in `src/App.tsx`, so newly opened documents start at the beginning.

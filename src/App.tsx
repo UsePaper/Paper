@@ -34,6 +34,7 @@ function App() {
   const lastSavedContent = useRef('');
   const [blurEditorSignal, setBlurEditorSignal] = useState(0);
   const [focusEditorSignal, setFocusEditorSignal] = useState(() => Date.now());
+  const editorAreaRef = useRef<HTMLDivElement>(null);
   const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>(() => {
     if (typeof window === 'undefined') return 'light';
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -177,6 +178,9 @@ function App() {
       markClean(fileContent, selectedPath);
       setContent(fileContent);
       setBlurEditorSignal(Date.now());
+      if (editorAreaRef.current) {
+        editorAreaRef.current.scrollTo({ top: 0 });
+      }
     } catch (error) {
       alert(`Failed to open file: ${error}`);
     }
@@ -193,6 +197,9 @@ function App() {
         markClean(fileContent, path);
         setContent(fileContent);
         setBlurEditorSignal(Date.now());
+        if (editorAreaRef.current) {
+          editorAreaRef.current.scrollTo({ top: 0 });
+        }
       } catch (error) {
         alert(`Failed to open file: ${error}`);
       }
@@ -278,7 +285,7 @@ function App() {
 
   return (
     <div className="app-shell">
-      <div className="editor-area">
+      <div className="editor-area" ref={editorAreaRef}>
         <Editor
           value={content}
           onChange={handleContentChange}
