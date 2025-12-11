@@ -199,7 +199,10 @@ function App() {
 
   useEffect(() => {
     if (content === NEW_CONTENT) {
-      setFocusEditorSignal(Date.now());
+      const timeoutId = setTimeout(() => {
+        setFocusEditorSignal(Date.now());
+      }, 100);
+      return () => clearTimeout(timeoutId);
     }
   }, [content]);
 
