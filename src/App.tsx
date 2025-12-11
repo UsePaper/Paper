@@ -34,7 +34,7 @@ function App() {
   const lastSavedContent = useRef('');
   const [blurEditorSignal, setBlurEditorSignal] = useState(0);
   const [focusEditorSignal, setFocusEditorSignal] = useState(0);
-  const [isContentLoading, setIsContentLoading] = useState(false);
+  const [isContentLoading, setIsContentLoading] = useState(true);
   const editorAreaRef = useRef<HTMLDivElement>(null);
   const pendingScrollToTop = useRef(false);
   // Delay in ms before showing content after scroll - matches CSS transition
@@ -203,6 +203,9 @@ function App() {
     invoke<string | null>('get_startup_file').then((path) => {
       if (path) {
         loadFilePath(path);
+      } else {
+        // No startup file, reveal content
+        setIsContentLoading(false);
       }
     });
 
