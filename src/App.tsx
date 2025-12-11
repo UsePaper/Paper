@@ -37,6 +37,7 @@ function App() {
   const [isContentLoading, setIsContentLoading] = useState(true);
   const editorAreaRef = useRef<HTMLDivElement>(null);
   const pendingScrollToTop = useRef(false);
+  const revealTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Delay in ms before showing content after scroll - matches CSS transition
   const SCROLL_HIDE_DELAY_MS = 100;
   const systemTheme = useSystemTheme(settings.themeMode === 'system');
@@ -79,8 +80,13 @@ function App() {
     pendingScrollToTop.current = false;
     // Scroll while content is still hidden (opacity: 0)
     scrollEditorToTop();
+    // Clear any pending reveal timeout
+    if (revealTimeoutRef.current !== null) {
+      clearTimeout(revealTimeoutRef.current);
+    }
     // Wait for scroll to complete, then reveal content
-    setTimeout(() => {
+    revealTimeoutRef.current = setTimeout(() => {
+      revealTimeoutRef.current = null;
       setIsContentLoading(false);
     }, SCROLL_HIDE_DELAY_MS);
   }, [scrollEditorToTop]);
