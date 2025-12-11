@@ -1,18 +1,18 @@
 <svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
-        <path id="squirclePath" d="M128 512C128 196.8 196.8 128 512 128C827.2 128 896 196.8 896 512C896 827.2 827.2 896 512 896C196.8 896 128 827.2 128 512Z" />
-        <linearGradient id="bgGradient" x1="512" y1="128" x2="512" y2="896" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#FDFDFD"/>
-            <stop offset="1" stop-color="#E8E8E8"/>
+        <path id="squirclePath" d="M72 512C72 170 170 72 512 72C854 72 952 170 952 512C952 854 854 952 512 952C170 952 72 854 72 512Z" />
+        <linearGradient id="bgGradient" x1="512" y1="72" x2="512" y2="952" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#FCFCFC"/>
+            <stop offset="1" stop-color="#E0E0E0"/>
         </linearGradient>
-        <linearGradient id="paperGradient" x1="256" y1="256" x2="768" y2="768" gradientUnits="userSpaceOnUse">
+        <linearGradient id="paperGradient" x1="262" y1="200" x2="762" y2="820" gradientUnits="userSpaceOnUse">
             <stop offset="0" stop-color="#FFFFFF"/>
-            <stop offset="1" stop-color="#F5F5F7"/>
+            <stop offset="1" stop-color="#F2F2F5"/>
         </linearGradient>
         <filter id="floatShadow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur in="SourceAlpha" stdDeviation="16"/>
-            <feOffset dx="0" dy="12"/>
-            <feFlood flood-color="#000000" flood-opacity="0.12"/>
+            <feGaussianBlur in="SourceAlpha" stdDeviation="18"/>
+            <feOffset dx="0" dy="14"/>
+            <feFlood flood-color="#000000" flood-opacity="0.14"/>
             <feComposite in2="SourceAlpha" operator="in"/>
             <feMerge>
                 <feMergeNode/>
@@ -21,30 +21,31 @@
         </filter>
         <filter id="insetShadow">
             <feOffset dx="0" dy="0"/>
-            <feGaussianBlur stdDeviation="10" result="offset-blur"/>
+            <feGaussianBlur stdDeviation="12" result="offset-blur"/>
             <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse"/>
-            <feFlood flood-color="black" flood-opacity="0.05" result="color"/>
+            <feFlood flood-color="black" flood-opacity="0.06" result="color"/>
             <feComposite operator="in" in="color" in2="inverse" result="shadow"/>
             <feComposite operator="over" in="shadow" in2="SourceGraphic"/>
         </filter>
     </defs>
     <use href="#squirclePath" fill="url(#bgGradient)" filter="url(#insetShadow)"/>
     <g filter="url(#floatShadow)">
-        <path d="M282 780 V 260 Q 282 230 312 230 H 632 L 762 360 V 780 Q 762 810 732 810 H 312 Q 282 810 282 780 Z" fill="url(#paperGradient)"/>
-        <path d="M632 230 V 330 Q 632 360 662 360 H 762 L 632 230 Z" fill="#E0E0E0"/>
-        <path d="M632 230 L 762 360 L 632 360 L 632 230 Z" fill="black" fill-opacity="0.04"/>
+        <path d="M272 790 V 230 Q 272 200 302 200 H 632 L 752 320 V 790 Q 752 820 722 820 H 302 Q 272 820 272 790 Z" fill="url(#paperGradient)"/>
+        <path d="M632 200 V 290 Q 632 320 662 320 H 752 L 632 200 Z" fill="#D6D6D6"/>
+        <path d="M632 200 L 752 320 L 632 320 L 632 200 Z" fill="black" fill-opacity="0.04"/>
     </g>
     <g opacity="0.9">
-        <rect x="342" y="340" width="180" height="18" rx="9" fill="#007AFF"/>
-        <rect x="342" y="380" width="100" height="10" rx="5" fill="#C7C7CC"/>
-        <rect x="342" y="430" width="360" height="10" rx="5" fill="#8E8E93"/>
-        <rect x="342" y="455" width="340" height="10" rx="5" fill="#8E8E93"/>
-        <rect x="610" y="455" width="60" height="10" rx="5" fill="#FF9500"/>
-        <rect x="342" y="480" width="300" height="10" rx="5" fill="#8E8E93"/>
-        <rect x="342" y="520" width="380" height="60" rx="8" fill="#F2F2F7"/>
-        <rect x="362" y="535" width="200" height="8" rx="4" fill="#34C759"/>
-        <rect x="362" y="555" width="150" height="8" rx="4" fill="#8E8E93"/>
-        <rect x="342" y="610" width="380" height="10" rx="5" fill="#8E8E93"/>
-        <rect x="342" y="635" width="200" height="10" rx="5" fill="#8E8E93"/>
+        <rect x="332" y="302" width="180" height="18" rx="9" fill="#007AFF"/>
+        <rect x="332" y="342" width="100" height="10" rx="5" fill="#C7C7CC"/>
+        <rect x="332" y="392" width="360" height="10" rx="5" fill="#8E8E93"/>
+        <rect x="332" y="417" width="340" height="10" rx="5" fill="#8E8E93"/>
+        <rect x="600" y="417" width="60" height="10" rx="5" fill="#FF9500"/>
+        <rect x="332" y="442" width="300" height="10" rx="5" fill="#8E8E93"/>
+        <rect x="332" y="482" width="360" height="60" rx="8" fill="#F0F0F5"/>
+        <rect x="352" y="497" width="200" height="8" rx="4" fill="#34C759"/>
+        <rect x="352" y="517" width="150" height="8" rx="4" fill="#8E8E93"/>
+        <rect x="332" y="572" width="360" height="10" rx="5" fill="#8E8E93"/>
+        <rect x="332" y="597" width="200" height="10" rx="5" fill="#8E8E93"/>
+        <rect x="332" y="647" width="280" height="10" rx="5" fill="#8E8E93"/>
     </g>
 </svg>
