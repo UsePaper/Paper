@@ -8,6 +8,7 @@
     "core:window:allow-set-title",
     "core:window:allow-close",
     "core:window:allow-destroy",
+    "core:app:allow-set-app-theme",
     "opener:default",
     "fs:default",
     "fs:allow-home-read-recursive",

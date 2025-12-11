@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { confirm } from '@tauri-apps/plugin-dialog';
 import { getCurrentWindow } from '@tauri-apps/api/window';
+import { setTheme as setNativeTheme } from '@tauri-apps/api/app';
 import { listen } from '@tauri-apps/api/event';
 import Editor from './components/Editor';
 import StatusBar from './components/StatusBar';
@@ -75,6 +76,9 @@ function App() {
     root.classList.remove('theme-light', 'theme-dark');
     root.classList.add(themeClass);
     root.style.colorScheme = appliedTheme === 'dark' ? 'dark' : 'light';
+    if (typeof window !== 'undefined') {
+      setNativeTheme(appliedTheme).catch((error) => console.error('Failed to set native theme', error));
+    }
     try {
       localStorage.setItem('paper-theme-mode', settings.themeMode);
       localStorage.setItem('paper-resolved-theme', appliedTheme);
