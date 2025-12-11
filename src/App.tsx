@@ -33,7 +33,7 @@ function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const lastSavedContent = useRef('');
   const [blurEditorSignal, setBlurEditorSignal] = useState(0);
-  const [focusEditorSignal, setFocusEditorSignal] = useState(() => Date.now());
+  const [focusEditorSignal, setFocusEditorSignal] = useState(0);
   const editorAreaRef = useRef<HTMLDivElement>(null);
   const systemTheme = useSystemTheme(settings.themeMode === 'system');
   const [hasLoadedSettings, setHasLoadedSettings] = useState(false);
@@ -196,6 +196,12 @@ function App() {
       unlisten.then((f) => f());
     };
   }, [loadFilePath]);
+
+  useEffect(() => {
+    if (content === NEW_CONTENT) {
+      setFocusEditorSignal(Date.now());
+    }
+  }, [content]);
 
   useEffect(() => {
     const unlisten = listen<string>('menu-event', (event) => {
