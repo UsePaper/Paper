@@ -1,21 +1,47 @@
 mod commands;
+use std::sync::Mutex;
 use tauri::menu::{Menu, MenuItem, PredefinedMenuItem, Submenu};
-use tauri::Emitter;
+use tauri::{Emitter, Manager};
+
+struct AppState {
+    pending_file: Mutex<Option<String>>,
+}
+
+#[tauri::command]
+fn get_startup_file(state: tauri::State<AppState>) -> Option<String> {
+    let mut file = state.pending_file.lock().unwrap();
+    file.take()
+}
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     #[cfg(debug_assertions)]
-    let builder = tauri::Builder::default()
-        .plugin(tauri_plugin_devtools::init());
+    let builder = tauri::Builder::default().plugin(tauri_plugin_devtools::init());
     #[cfg(not(debug_assertions))]
     let builder = tauri::Builder::default();
 
-    builder
+    let app = builder
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
+        .manage(AppState {
+            pending_file: Mutex::new(None),
+        })
         .setup(|app| {
             let handle = app.handle();
+
+            // Check command line arguments for a file path (for Windows/Linux and some macOS launch scenarios)
+            let args: Vec<String> = std::env::args().collect();
+            if args.len() > 1 {
+                for arg in args.iter().skip(1) {
+                    // Simple heuristic: if it doesn't start with "-", assume it's a file
+                    if !arg.starts_with("-") {
+                        let state = app.state::<AppState>();
+                        *state.pending_file.lock().unwrap() = Some(arg.clone());
+                        break;
+                    }
+                }
+            }
 
             // Paper (App Menu)
             let paper_menu = Submenu::new(handle, "Paper", true)?;
@@ -90,8 +116,22 @@ pub fn run() {
             commands::show_open_dialog,
             commands::show_save_dialog,
             commands::load_settings,
-            commands::save_settings
+            commands::save_settings,
+            get_startup_file
         ])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .build(tauri::generate_context!())
+        .expect("error while building tauri application");
+
+    app.run(|app_handle, event| {
+        if let tauri::RunEvent::Opened { urls } = event {
+            if let Some(url) = urls.first() {
+                if let Ok(path_buf) = url.to_file_path() {
+                    let path_str = path_buf.to_string_lossy().to_string();
+                    let state = app_handle.state::<AppState>();
+                    *state.pending_file.lock().unwrap() = Some(path_str.clone());
+                    let _ = app_handle.emit("open-file", path_str);
+                }
+            }
+        }
+    });
 }

@@ -6,7 +6,12 @@ import { listen } from "@tauri-apps/api/event";
 import Editor from "./components/Editor";
 import StatusBar from "./components/StatusBar";
 import SettingsModal from "./components/SettingsModal";
-import { defaultSettings, loadSavedSettings, persistSettings, Settings } from "./settings";
+import {
+  defaultSettings,
+  loadSavedSettings,
+  persistSettings,
+  Settings,
+} from "./settings";
 
 type EditorStats = {
   wordCount: number;
@@ -35,13 +40,16 @@ function App() {
   const [focusEditorSignal, setFocusEditorSignal] = useState(() => Date.now());
   const [systemTheme, setSystemTheme] = useState<"light" | "dark">(() => {
     if (typeof window === "undefined") return "light";
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
   });
   const [hasLoadedSettings, setHasLoadedSettings] = useState(false);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const listener = (event: MediaQueryListEvent) => setSystemTheme(event.matches ? "dark" : "light");
+    const listener = (event: MediaQueryListEvent) =>
+      setSystemTheme(event.matches ? "dark" : "light");
     media.addEventListener("change", listener);
     return () => media.removeEventListener("change", listener);
   }, []);
@@ -60,24 +68,35 @@ function App() {
 
   useEffect(() => {
     const root = document.documentElement;
-    const fontFamily = settings.fontFamily === "System" ? "var(--font-body)" : settings.fontFamily;
+    const fontFamily =
+      settings.fontFamily === "System"
+        ? "var(--font-body)"
+        : settings.fontFamily;
     root.style.setProperty("--editor-font-family", fontFamily);
     root.style.setProperty("--editor-font-size", `${settings.fontSize}px`);
     root.style.setProperty("--editor-line-height", `${settings.lineHeight}`);
-    root.style.setProperty("--editor-content-width", `${settings.contentWidth}px`);
+    root.style.setProperty(
+      "--editor-content-width",
+      `${settings.contentWidth}px`,
+    );
   }, [settings]);
 
-  const appliedTheme = settings.themeMode === "system" ? systemTheme : settings.themeMode;
+  const appliedTheme =
+    settings.themeMode === "system" ? systemTheme : settings.themeMode;
 
   useEffect(() => {
     document.documentElement.classList.remove("theme-light", "theme-dark");
-    document.documentElement.classList.add(appliedTheme === "dark" ? "theme-dark" : "theme-light");
+    document.documentElement.classList.add(
+      appliedTheme === "dark" ? "theme-dark" : "theme-light",
+    );
   }, [appliedTheme]);
 
   // Update native window title
   useEffect(() => {
     const title = isDirty ? `${documentTitle} •` : documentTitle;
-    getCurrentWindow().setTitle(title).then(_ => {});
+    getCurrentWindow()
+      .setTitle(title)
+      .then((_) => {});
   }, [documentTitle, isDirty]);
 
   const markClean = useCallback(
@@ -154,9 +173,13 @@ function App() {
     const proceed = await confirmDirtyFlow();
     if (!proceed) return;
     try {
-      const selectedPath = (await invoke<string | null>("show_open_dialog")) as string | null;
+      const selectedPath = (await invoke<string | null>("show_open_dialog")) as
+        | string
+        | null;
       if (!selectedPath) return;
-      const fileContent = (await invoke<string>("read_file", { path: selectedPath })) as string;
+      const fileContent = (await invoke<string>("read_file", {
+        path: selectedPath,
+      })) as string;
       markClean(fileContent, selectedPath);
       setContent(fileContent);
       setBlurEditorSignal(Date.now());
@@ -165,20 +188,55 @@ function App() {
     }
   }, [confirmDirtyFlow, markClean]);
 
+  const loadFilePath = useCallback(
+    async (path: string) => {
+      const proceed = await confirmDirtyFlow();
+      if (!proceed) return;
+      try {
+        const fileContent = (await invoke<string>("read_file", {
+          path,
+        })) as string;
+        markClean(fileContent, path);
+        setContent(fileContent);
+        setBlurEditorSignal(Date.now());
+      } catch (error) {
+        alert(`Failed to open file: ${error}`);
+      }
+    },
+    [confirmDirtyFlow, markClean],
+  );
+
+  useEffect(() => {
+    // Check for startup file
+    invoke<string | null>("get_startup_file").then((path) => {
+      if (path) {
+        loadFilePath(path);
+      }
+    });
+
+    const unlisten = listen<string>("open-file", (event) => {
+      loadFilePath(event.payload);
+    });
+
+    return () => {
+      unlisten.then((f) => f());
+    };
+  }, [loadFilePath]);
+
   useEffect(() => {
     const unlisten = listen<string>("menu-event", (event) => {
       switch (event.payload) {
         case "new":
-          handleNew().then(_ => {});
+          handleNew().then((_) => {});
           break;
         case "open":
-          handleOpen().then(_ => {});
+          handleOpen().then((_) => {});
           break;
         case "save":
-          handleSave().then(_ => {});
+          handleSave().then((_) => {});
           break;
         case "save_as":
-          handleSaveAs().then(_ => {});
+          handleSaveAs().then((_) => {});
           break;
         case "toggle_status_bar":
           setShowStatusBar((prev) => !prev);
@@ -187,7 +245,9 @@ function App() {
           setSettingsOpen(true);
           break;
         case "quit":
-          getCurrentWindow().close().then(_ => {});
+          getCurrentWindow()
+            .close()
+            .then((_) => {});
           break;
       }
     });
@@ -199,19 +259,22 @@ function App() {
 
   useEffect(() => {
     if (!hasLoadedSettings) return;
-    persistSettings(settings).then(_ => {});
+    persistSettings(settings).then((_) => {});
   }, [settings, hasLoadedSettings]);
 
   useEffect(() => {
     const window = getCurrentWindow();
     const unlisten = window.onCloseRequested(async (event) => {
       if (!isDirty) return;
-      const shouldQuit = await confirm("You have unsaved changes. Quit without saving?", {
-        title: "Unsaved changes",
-        kind: "error",
-        okLabel: "Quit",
-        cancelLabel: "Cancel",
-      });
+      const shouldQuit = await confirm(
+        "You have unsaved changes. Quit without saving?",
+        {
+          title: "Unsaved changes",
+          kind: "error",
+          okLabel: "Quit",
+          cancelLabel: "Cancel",
+        },
+      );
       if (!shouldQuit) {
         event.preventDefault();
       }
@@ -234,7 +297,12 @@ function App() {
         />
       </div>
       {showStatusBar && <StatusBar wordCount={wordCount} />}
-      <SettingsModal open={settingsOpen} settings={settings} onClose={() => setSettingsOpen(false)} onChange={setSettings} />
+      <SettingsModal
+        open={settingsOpen}
+        settings={settings}
+        onClose={() => setSettingsOpen(false)}
+        onChange={setSettings}
+      />
     </div>
   );
 }
