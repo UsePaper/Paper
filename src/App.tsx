@@ -63,6 +63,14 @@ function App() {
 
   useApplyTheme(appliedTheme, settings.themeMode);
 
+  const scrollEditorToTop = useCallback(() => {
+    const area = editorAreaRef.current;
+    if (!area) return;
+    area.scrollTo({ top: 0 });
+    requestAnimationFrame(() => area.scrollTo({ top: 0 }));
+    window.scrollTo({ top: 0 });
+  }, []);
+
   // Update native window title
   useEffect(() => {
     const title = isDirty ? `${documentTitle} •` : documentTitle;
@@ -152,17 +160,14 @@ function App() {
         markClean(fileContent, path);
         setContent(fileContent);
         setBlurEditorSignal(Date.now());
-        if (editorAreaRef.current) {
-          console.log('Scrolling to top');
-          editorAreaRef.current.scrollTo({ top: 0 });
-        }
+        scrollEditorToTop();
         return true;
       } catch (error) {
         alert(`Failed to open file: ${error}`);
         return false;
       }
     },
-    [confirmDirtyFlow, markClean],
+    [confirmDirtyFlow, markClean, scrollEditorToTop],
   );
 
   const handleOpen = useCallback(async () => {
