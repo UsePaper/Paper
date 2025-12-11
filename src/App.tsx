@@ -70,9 +70,18 @@ function App() {
   const appliedTheme = settings.themeMode === 'system' ? systemTheme : settings.themeMode;
 
   useEffect(() => {
-    document.documentElement.classList.remove('theme-light', 'theme-dark');
-    document.documentElement.classList.add(appliedTheme === 'dark' ? 'theme-dark' : 'theme-light');
-  }, [appliedTheme]);
+    const root = document.documentElement;
+    const themeClass = appliedTheme === 'dark' ? 'theme-dark' : 'theme-light';
+    root.classList.remove('theme-light', 'theme-dark');
+    root.classList.add(themeClass);
+    root.style.colorScheme = appliedTheme === 'dark' ? 'dark' : 'light';
+    try {
+      localStorage.setItem('paper-theme-mode', settings.themeMode);
+      localStorage.setItem('paper-resolved-theme', appliedTheme);
+    } catch (error) {
+      console.error('Failed to cache theme', error);
+    }
+  }, [appliedTheme, settings.themeMode]);
 
   // Update native window title
   useEffect(() => {

@@ -4,6 +4,34 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (() => {
+        const root = document.documentElement;
+        const prefersDark =
+          window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        let savedMode = null;
+        let savedResolved = null;
+        try {
+          savedMode = localStorage.getItem('paper-theme-mode');
+          savedResolved = localStorage.getItem('paper-resolved-theme');
+        } catch (error) {
+          console.error('Theme bootstrap localStorage unavailable', error);
+        }
+        let initialTheme = prefersDark ? 'dark' : 'light';
+
+        if (savedMode === 'dark' || savedMode === 'light') {
+          initialTheme = savedMode;
+        } else if (savedMode === 'system') {
+          initialTheme = prefersDark ? 'dark' : 'light';
+        } else if (savedResolved === 'dark' || savedResolved === 'light') {
+          initialTheme = savedResolved;
+        }
+
+        root.classList.add(initialTheme === 'dark' ? 'theme-dark' : 'theme-light');
+        root.style.backgroundColor = initialTheme === 'dark' ? '#1e1e1e' : '#f8f9fa';
+        root.style.colorScheme = initialTheme === 'dark' ? 'dark' : 'light';
+      })();
+    </script>
     <title>Paper</title>
   </head>
 

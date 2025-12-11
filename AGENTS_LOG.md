@@ -58,3 +58,8 @@
 - Disabled text selection for UI chrome globally (with vendor prefixes) while keeping editor and form controls selectable in `src/styles/global.css` to match native-feeling menus and labels.
 - Added initial/editor-focus signaling so the editor auto-focuses on launch and after creating a new document by passing a `focusSignal` into `Editor` from `App` (touching Editor/App owned by prior frontend agent).
 - Guarded editor focus to wait for the TipTap view to mount before calling `focus()` (using rAF retry) to avoid `view['hasFocus']` errors when auto-focusing.
+
+#### 2025 12 11 – Codex
+
+- Prevented the dark-mode launch flash by bootstrapping the theme class and background color from stored settings or system preference in `index.html` before React mounts.
+- Cached the selected and resolved theme in `localStorage` from `src/App.tsx` so subsequent launches can paint with the correct palette immediately.
