@@ -32,6 +32,7 @@ function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const lastSavedContent = useRef("");
   const [blurEditorSignal, setBlurEditorSignal] = useState(0);
+  const [focusEditorSignal, setFocusEditorSignal] = useState(() => Date.now());
   const [systemTheme, setSystemTheme] = useState<"light" | "dark">(() => {
     if (typeof window === "undefined") return "light";
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -146,6 +147,7 @@ function App() {
     if (!proceed) return;
     markClean(NEW_CONTENT, null);
     setContent(NEW_CONTENT);
+    setFocusEditorSignal(Date.now());
   }, [confirmDirtyFlow, markClean]);
 
   const handleOpen = useCallback(async () => {
@@ -228,6 +230,7 @@ function App() {
           onChange={handleContentChange}
           onStatsChange={handleStatsChange}
           blurSignal={blurEditorSignal}
+          focusSignal={focusEditorSignal}
         />
       </div>
       {showStatusBar && <StatusBar wordCount={wordCount} />}

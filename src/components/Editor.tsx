@@ -8,6 +8,7 @@ type Props = {
   onChange: (markdown: string) => void;
   onStatsChange?: (stats: { wordCount: number }) => void;
   blurSignal?: number;
+  focusSignal?: number;
 };
 
 const countWords = (text: string) => {
@@ -16,7 +17,7 @@ const countWords = (text: string) => {
   return trimmed.split(/\s+/).length;
 };
 
-function Editor({ value, onChange, onStatsChange, blurSignal }: Props) {
+function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
   const editor = useEditor({
     extensions: [
@@ -79,6 +80,23 @@ function Editor({ value, onChange, onStatsChange, blurSignal }: Props) {
       document.removeEventListener("mousedown", handler);
     };
   }, [editor]);
+
+  useEffect(() => {
+    if (!editor || !focusSignal) return;
+    let raf: number | null = null;
+    const focusWhenReady = () => {
+      if (!editor || editor.isDestroyed) return;
+      if (!editor.view) {
+        raf = requestAnimationFrame(focusWhenReady);
+        return;
+      }
+      editor.commands.focus();
+    };
+    focusWhenReady();
+    return () => {
+      if (raf !== null) cancelAnimationFrame(raf);
+    };
+  }, [editor, focusSignal]);
 
   if (!editor) {
     return <div className="editor-loading">Loading editor…</div>;
