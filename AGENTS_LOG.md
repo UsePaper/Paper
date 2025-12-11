@@ -1,4 +1,5 @@
 #### 2025 12 09 – Rust backend and Tauri command author
+
 - Implemented file IO and dialog commands in src-tauri/src/commands.rs and registered them through the Tauri builder.
 - Labeled the main window; removed deprecated `allowlist` block from src-tauri/tauri.conf.json after aligning with Tauri v2 plugin permission model.
 - Updated dialog import to the Tauri v2 `tauri::dialog::blocking` path to resolve compile errors.
@@ -7,12 +8,14 @@
 - Adjusted fs plugin config to `requireLiteralLeadingDot` and moved scope definitions into capability permissions for user directories (home, desktop, documents, downloads, appdata).
 
 #### 2025 12 09 – Frontend shell and editor integration
+
 - Rebuilt React shell with TitleBar, Editor, and StatusBar layout plus keyboard shortcuts and file flows.
 - Integrated TipTap markdown editor with placeholder, markdown sync, and word count reporting.
 - Added global and theme styling for light/dark presentation and minimal chrome; wired theme preference detection.
 - Declared TipTap dependencies in package.json.
 
 #### 2025 12 10 – Theming and polish specialist
+
 - Refined `src/styles/theme.css` with a cleaner, Typora-inspired variable set and typography.
 - Updated `src/styles/global.css` to be a minimal reset using the new theme variables.
 - Polished `StatusBar` to be minimal (removed redundant filename display).
@@ -20,6 +23,7 @@
 - Added support for printing, link styling, and better spacing in the editor.
 
 #### 2025 12 10 – Agent 1 (Native Menu and Window Integration)
+
 - Removed custom `TitleBar` component and styles for a native look.
 - Implemented logic to sync document title (and dirty state) to the native window title.
 - Implemented native macOS menus (Paper, File, Edit, View) in `src-tauri/src/lib.rs`.
@@ -27,6 +31,7 @@
 - Removed duplicate keyboard shortcut listeners in React, relying on native menu accelerators.
 
 #### 2025 12 10 – Agent 2 (Settings System and Persistence)
+
 - Created `SettingsModal` component with instant preview for font, size, line-height, width, and theme.
 - Implemented `src/settings.ts` for type-safe settings management and default values.
 - Wired persistence via Tauri commands to load settings on launch and save on modification.
@@ -34,11 +39,13 @@
 - Added system-aware theme switching logic.
 
 #### 2025 12 10 – Codex
+
 - Added close-request guard in `src/App.tsx` that prompts before quitting when there are unsaved changes.
 - Swapped to Tauri dialog plugin for the confirmation dialog and registered the plugin in the Tauri builder.
 - Tweaked the confirmation dialog labels and warning kind to avoid the default folder icon and clarify actions.
 
 #### 2025 12 10 – Codex
+
 - Granted `core:window:allow-destroy` permission in `src-tauri/capabilities/default.json` so the app can close windows without permission errors.
 - Fixed word count staying at zero after opening a file by recalculating stats whenever external content changes in `src/components/Editor.tsx`.
 - Added an open-file blur signal so newly opened documents start unfocused (preview/read-only feel) by blurring the editor after load.

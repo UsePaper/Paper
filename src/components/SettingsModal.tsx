@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { AVAILABLE_FONTS, Settings, ThemeMode, defaultSettings } from "../settings";
+import { useEffect } from 'react';
+import { AVAILABLE_FONTS, Settings, ThemeMode, defaultSettings } from '../settings';
 
 type Props = {
   open: boolean;
@@ -9,21 +9,21 @@ type Props = {
 };
 
 const themeOptions: { label: string; value: ThemeMode }[] = [
-  { label: "System", value: "system" },
-  { label: "Light", value: "light" },
-  { label: "Dark", value: "dark" },
+  { label: 'System', value: 'system' },
+  { label: 'Light', value: 'light' },
+  { label: 'Dark', value: 'dark' },
 ];
 
 function SettingsModal({ open, settings, onClose, onChange }: Props) {
   useEffect(() => {
     if (!open) return;
     const handler = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         onClose();
       }
     };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
   }, [open, onClose]);
 
   if (!open) return null;
@@ -83,7 +83,7 @@ function SettingsModal({ open, settings, onClose, onChange }: Props) {
               step={1}
               value={settings.fontSize}
               onChange={(event) => {
-                const value = event.target.value === "" ? settings.fontSize : Number(event.target.value);
+                const value = event.target.value === '' ? settings.fontSize : Number(event.target.value);
                 onChange({ ...settings, fontSize: value });
               }}
             />
@@ -98,7 +98,7 @@ function SettingsModal({ open, settings, onClose, onChange }: Props) {
               step={0.05}
               value={settings.lineHeight}
               onChange={(event) => {
-                const value = event.target.value === "" ? settings.lineHeight : Number(event.target.value);
+                const value = event.target.value === '' ? settings.lineHeight : Number(event.target.value);
                 onChange({ ...settings, lineHeight: value });
               }}
             />
@@ -113,7 +113,7 @@ function SettingsModal({ open, settings, onClose, onChange }: Props) {
               step={20}
               value={settings.contentWidth}
               onChange={(event) => {
-                const value = event.target.value === "" ? settings.contentWidth : Number(event.target.value);
+                const value = event.target.value === '' ? settings.contentWidth : Number(event.target.value);
                 onChange({ ...settings, contentWidth: value });
               }}
             />
@@ -135,11 +135,7 @@ function SettingsModal({ open, settings, onClose, onChange }: Props) {
         </div>
 
         <footer className="settings-footer">
-          <button
-            className="settings-reset-btn"
-            type="button"
-            onClick={() => onChange(defaultSettings)}
-          >
+          <button className="settings-reset-btn" type="button" onClick={() => onChange(defaultSettings)}>
             Reset to default
           </button>
         </footer>

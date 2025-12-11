@@ -1,24 +1,19 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
-import { confirm } from "@tauri-apps/plugin-dialog";
-import { getCurrentWindow } from "@tauri-apps/api/window";
-import { listen } from "@tauri-apps/api/event";
-import Editor from "./components/Editor";
-import StatusBar from "./components/StatusBar";
-import SettingsModal from "./components/SettingsModal";
-import {
-  defaultSettings,
-  loadSavedSettings,
-  persistSettings,
-  Settings,
-} from "./settings";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { invoke } from '@tauri-apps/api/core';
+import { confirm } from '@tauri-apps/plugin-dialog';
+import { getCurrentWindow } from '@tauri-apps/api/window';
+import { listen } from '@tauri-apps/api/event';
+import Editor from './components/Editor';
+import StatusBar from './components/StatusBar';
+import SettingsModal from './components/SettingsModal';
+import { defaultSettings, loadSavedSettings, persistSettings, Settings } from './settings';
 
 type EditorStats = {
   wordCount: number;
 };
 
-const UNTITLED = "Untitled.md";
-const NEW_CONTENT = "###";
+const UNTITLED = 'Untitled.md';
+const NEW_CONTENT = '###';
 
 const getFileName = (path: string | null) => {
   if (!path) return UNTITLED;
@@ -35,23 +30,20 @@ function App() {
   const [showStatusBar, setShowStatusBar] = useState(true);
   const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const lastSavedContent = useRef("");
+  const lastSavedContent = useRef('');
   const [blurEditorSignal, setBlurEditorSignal] = useState(0);
   const [focusEditorSignal, setFocusEditorSignal] = useState(() => Date.now());
-  const [systemTheme, setSystemTheme] = useState<"light" | "dark">(() => {
-    if (typeof window === "undefined") return "light";
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
+  const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined') return 'light';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
   const [hasLoadedSettings, setHasLoadedSettings] = useState(false);
 
   useEffect(() => {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const listener = (event: MediaQueryListEvent) =>
-      setSystemTheme(event.matches ? "dark" : "light");
-    media.addEventListener("change", listener);
-    return () => media.removeEventListener("change", listener);
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const listener = (event: MediaQueryListEvent) => setSystemTheme(event.matches ? 'dark' : 'light');
+    media.addEventListener('change', listener);
+    return () => media.removeEventListener('change', listener);
   }, []);
 
   useEffect(() => {
@@ -68,27 +60,18 @@ function App() {
 
   useEffect(() => {
     const root = document.documentElement;
-    const fontFamily =
-      settings.fontFamily === "System"
-        ? "var(--font-body)"
-        : settings.fontFamily;
-    root.style.setProperty("--editor-font-family", fontFamily);
-    root.style.setProperty("--editor-font-size", `${settings.fontSize}px`);
-    root.style.setProperty("--editor-line-height", `${settings.lineHeight}`);
-    root.style.setProperty(
-      "--editor-content-width",
-      `${settings.contentWidth}px`,
-    );
+    const fontFamily = settings.fontFamily === 'System' ? 'var(--font-body)' : settings.fontFamily;
+    root.style.setProperty('--editor-font-family', fontFamily);
+    root.style.setProperty('--editor-font-size', `${settings.fontSize}px`);
+    root.style.setProperty('--editor-line-height', `${settings.lineHeight}`);
+    root.style.setProperty('--editor-content-width', `${settings.contentWidth}px`);
   }, [settings]);
 
-  const appliedTheme =
-    settings.themeMode === "system" ? systemTheme : settings.themeMode;
+  const appliedTheme = settings.themeMode === 'system' ? systemTheme : settings.themeMode;
 
   useEffect(() => {
-    document.documentElement.classList.remove("theme-light", "theme-dark");
-    document.documentElement.classList.add(
-      appliedTheme === "dark" ? "theme-dark" : "theme-light",
-    );
+    document.documentElement.classList.remove('theme-light', 'theme-dark');
+    document.documentElement.classList.add(appliedTheme === 'dark' ? 'theme-dark' : 'theme-light');
   }, [appliedTheme]);
 
   // Update native window title
@@ -121,7 +104,7 @@ function App() {
   const writeFile = useCallback(
     async (path: string) => {
       try {
-        await invoke("write_file", { path, contents: content });
+        await invoke('write_file', { path, contents: content });
         markClean(content, path);
         return true;
       } catch (error) {
@@ -134,7 +117,7 @@ function App() {
 
   const handleSaveAs = useCallback(async () => {
     try {
-      const selectedPath = (await invoke<string | null>("show_save_dialog", {
+      const selectedPath = (await invoke<string | null>('show_save_dialog', {
         default_file_name: getFileName(currentFilePath),
       })) as string | null;
       if (!selectedPath) return false;
@@ -154,11 +137,11 @@ function App() {
 
   const confirmDirtyFlow = useCallback(async () => {
     if (!isDirty) return true;
-    const save = window.confirm("You have unsaved changes. Save them?");
+    const save = window.confirm('You have unsaved changes. Save them?');
     if (save) {
       return await handleSave();
     }
-    return window.confirm("Discard unsaved changes?");
+    return window.confirm('Discard unsaved changes?');
   }, [handleSave, isDirty]);
 
   const handleNew = useCallback(async () => {
@@ -173,11 +156,9 @@ function App() {
     const proceed = await confirmDirtyFlow();
     if (!proceed) return;
     try {
-      const selectedPath = (await invoke<string | null>("show_open_dialog")) as
-        | string
-        | null;
+      const selectedPath = (await invoke<string | null>('show_open_dialog')) as string | null;
       if (!selectedPath) return;
-      const fileContent = (await invoke<string>("read_file", {
+      const fileContent = (await invoke<string>('read_file', {
         path: selectedPath,
       })) as string;
       markClean(fileContent, selectedPath);
@@ -193,7 +174,7 @@ function App() {
       const proceed = await confirmDirtyFlow();
       if (!proceed) return;
       try {
-        const fileContent = (await invoke<string>("read_file", {
+        const fileContent = (await invoke<string>('read_file', {
           path,
         })) as string;
         markClean(fileContent, path);
@@ -208,13 +189,13 @@ function App() {
 
   useEffect(() => {
     // Check for startup file
-    invoke<string | null>("get_startup_file").then((path) => {
+    invoke<string | null>('get_startup_file').then((path) => {
       if (path) {
         loadFilePath(path);
       }
     });
 
-    const unlisten = listen<string>("open-file", (event) => {
+    const unlisten = listen<string>('open-file', (event) => {
       loadFilePath(event.payload);
     });
 
@@ -224,27 +205,27 @@ function App() {
   }, [loadFilePath]);
 
   useEffect(() => {
-    const unlisten = listen<string>("menu-event", (event) => {
+    const unlisten = listen<string>('menu-event', (event) => {
       switch (event.payload) {
-        case "new":
+        case 'new':
           handleNew().then((_) => {});
           break;
-        case "open":
+        case 'open':
           handleOpen().then((_) => {});
           break;
-        case "save":
+        case 'save':
           handleSave().then((_) => {});
           break;
-        case "save_as":
+        case 'save_as':
           handleSaveAs().then((_) => {});
           break;
-        case "toggle_status_bar":
+        case 'toggle_status_bar':
           setShowStatusBar((prev) => !prev);
           break;
-        case "settings":
+        case 'settings':
           setSettingsOpen(true);
           break;
-        case "quit":
+        case 'quit':
           getCurrentWindow()
             .close()
             .then((_) => {});
@@ -266,15 +247,12 @@ function App() {
     const window = getCurrentWindow();
     const unlisten = window.onCloseRequested(async (event) => {
       if (!isDirty) return;
-      const shouldQuit = await confirm(
-        "You have unsaved changes. Quit without saving?",
-        {
-          title: "Unsaved changes",
-          kind: "error",
-          okLabel: "Quit",
-          cancelLabel: "Cancel",
-        },
-      );
+      const shouldQuit = await confirm('You have unsaved changes. Quit without saving?', {
+        title: 'Unsaved changes',
+        kind: 'error',
+        okLabel: 'Quit',
+        cancelLabel: 'Cancel',
+      });
       if (!shouldQuit) {
         event.preventDefault();
       }

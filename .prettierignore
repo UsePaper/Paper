@@ -1,0 +1,10 @@
+dist
+src-tauri
+.idea
+node_modules
+e2e
+pnpm-lock.yaml
+tslint.json
+tsconfig.spec.json
+tsconfig.json
+tsconfig.app.json

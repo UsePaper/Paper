@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
-import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { Markdown } from '@tiptap/markdown'
+import { useEffect, useRef } from 'react';
+import { EditorContent, useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import { Markdown } from '@tiptap/markdown';
 
 type Props = {
   value: string;
@@ -23,7 +23,7 @@ function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal }: Pro
     extensions: [
       StarterKit.configure({
         codeBlock: {
-          languageClassPrefix: "language-",
+          languageClassPrefix: 'language-',
         },
       }),
       Markdown.configure({
@@ -34,7 +34,7 @@ function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal }: Pro
       }),
     ],
     onCreate: ({ editor }) => {
-      editor.commands.setContent(value, { emitUpdate: false, contentType: "markdown" });
+      editor.commands.setContent(value, { emitUpdate: false, contentType: 'markdown' });
     },
     onUpdate: ({ editor: tiptap }) => {
       const markdown = tiptap.getMarkdown();
@@ -45,7 +45,7 @@ function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal }: Pro
     },
     editorProps: {
       attributes: {
-        class: "editor-content",
+        class: 'editor-content',
       },
     },
   });
@@ -54,7 +54,7 @@ function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal }: Pro
     if (!editor) return;
     const currentMarkdown = editor.getMarkdown();
     if (value !== currentMarkdown) {
-      editor.commands.setContent(value, { emitUpdate: false, contentType: "markdown" });
+      editor.commands.setContent(value, { emitUpdate: false, contentType: 'markdown' });
     }
   }, [editor, value]);
 
@@ -75,9 +75,9 @@ function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal }: Pro
       if (contentRef.current.contains(event.target as Node)) return;
       editor.commands.blur();
     };
-    document.addEventListener("mousedown", handler);
+    document.addEventListener('mousedown', handler);
     return () => {
-      document.removeEventListener("mousedown", handler);
+      document.removeEventListener('mousedown', handler);
     };
   }, [editor]);
 
