@@ -141,30 +141,10 @@ function App() {
     setFocusEditorSignal(Date.now());
   }, [confirmDirtyFlow, markClean]);
 
-  const handleOpen = useCallback(async () => {
-    const proceed = await confirmDirtyFlow();
-    if (!proceed) return;
-    try {
-      const selectedPath = (await invoke<string | null>('show_open_dialog')) as string | null;
-      if (!selectedPath) return;
-      const fileContent = (await invoke<string>('read_file', {
-        path: selectedPath,
-      })) as string;
-      markClean(fileContent, selectedPath);
-      setContent(fileContent);
-      setBlurEditorSignal(Date.now());
-      if (editorAreaRef.current) {
-        editorAreaRef.current.scrollTo({ top: 0 });
-      }
-    } catch (error) {
-      alert(`Failed to open file: ${error}`);
-    }
-  }, [confirmDirtyFlow, markClean]);
-
   const loadFilePath = useCallback(
     async (path: string) => {
       const proceed = await confirmDirtyFlow();
-      if (!proceed) return;
+      if (!proceed) return false;
       try {
         const fileContent = (await invoke<string>('read_file', {
           path,
@@ -175,12 +155,24 @@ function App() {
         if (editorAreaRef.current) {
           editorAreaRef.current.scrollTo({ top: 0 });
         }
+        return true;
       } catch (error) {
         alert(`Failed to open file: ${error}`);
+        return false;
       }
     },
     [confirmDirtyFlow, markClean],
   );
+
+  const handleOpen = useCallback(async () => {
+    try {
+      const selectedPath = (await invoke<string | null>('show_open_dialog')) as string | null;
+      if (!selectedPath) return;
+      await loadFilePath(selectedPath);
+    } catch (error) {
+      alert(`Failed to open file: ${error}`);
+    }
+  }, [loadFilePath]);
 
   useEffect(() => {
     // Check for startup file
