@@ -154,8 +154,8 @@ function App() {
       const selectedPath = (await invoke<string | null>("show_open_dialog")) as string | null;
       if (!selectedPath) return;
       const fileContent = (await invoke<string>("read_file", { path: selectedPath })) as string;
-      setContent(fileContent);
       markClean(fileContent, selectedPath);
+      setContent(fileContent);
       setBlurEditorSignal(Date.now());
     } catch (error) {
       alert(`Failed to open file: ${error}`);
