@@ -1,34 +1,50 @@
 <svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
-        <filter id="paperShadow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur in="SourceAlpha" stdDeviation="24"/>
-            <feOffset dx="0" dy="20" result="offsetblur"/>
-            <feFlood flood-color="#000000" flood-opacity="0.15"/>
-            <feComposite in2="offsetblur" operator="in"/>
+        <path id="squirclePath" d="M128 512C128 196.8 196.8 128 512 128C827.2 128 896 196.8 896 512C896 827.2 827.2 896 512 896C196.8 896 128 827.2 128 512Z" />
+        <linearGradient id="bgGradient" x1="512" y1="128" x2="512" y2="896" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#FDFDFD"/>
+            <stop offset="1" stop-color="#E8E8E8"/>
+        </linearGradient>
+        <linearGradient id="paperGradient" x1="256" y1="256" x2="768" y2="768" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#FFFFFF"/>
+            <stop offset="1" stop-color="#F5F5F7"/>
+        </linearGradient>
+        <filter id="floatShadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="16"/>
+            <feOffset dx="0" dy="12"/>
+            <feFlood flood-color="#000000" flood-opacity="0.12"/>
+            <feComposite in2="SourceAlpha" operator="in"/>
             <feMerge>
                 <feMergeNode/>
                 <feMergeNode in="SourceGraphic"/>
             </feMerge>
         </filter>
-        <linearGradient id="paperGradient" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#FFFFFF"/>
-            <stop offset="1" stop-color="#F2F2F2"/>
-        </linearGradient>
+        <filter id="insetShadow">
+            <feOffset dx="0" dy="0"/>
+            <feGaussianBlur stdDeviation="10" result="offset-blur"/>
+            <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse"/>
+            <feFlood flood-color="black" flood-opacity="0.05" result="color"/>
+            <feComposite operator="in" in="color" in2="inverse" result="shadow"/>
+            <feComposite operator="over" in="shadow" in2="SourceGraphic"/>
+        </filter>
     </defs>
-
-    <g filter="url(#paperShadow)">
-        <path d="M162 900 V 180 Q 162 140 202 140 H 662 L 862 340 V 900 Q 862 940 822 940 H 202 Q 162 940 162 900 Z" fill="url(#paperGradient)"/>
-        <path d="M662 140 V 300 Q 662 340 702 340 H 862 L 662 140 Z" fill="#E8E8E8"/>
-        <path d="M662 140 L 862 340 L 662 340 L 662 140 Z" fill="black" fill-opacity="0.05"/>
+    <use href="#squirclePath" fill="url(#bgGradient)" filter="url(#insetShadow)"/>
+    <g filter="url(#floatShadow)">
+        <path d="M282 780 V 260 Q 282 230 312 230 H 632 L 762 360 V 780 Q 762 810 732 810 H 312 Q 282 810 282 780 Z" fill="url(#paperGradient)"/>
+        <path d="M632 230 V 330 Q 632 360 662 360 H 762 L 632 230 Z" fill="#E0E0E0"/>
+        <path d="M632 230 L 762 360 L 632 360 L 632 230 Z" fill="black" fill-opacity="0.04"/>
     </g>
-
-    <g opacity="0.6">
-        <rect x="262" y="300" width="300" height="24" rx="12" fill="#333"/>
-        <rect x="262" y="400" width="500" height="16" rx="8" fill="#888"/>
-        <rect x="262" y="450" width="480" height="16" rx="8" fill="#888"/>
-        <rect x="262" y="500" width="460" height="16" rx="8" fill="#888"/>
-        <rect x="262" y="550" width="490" height="16" rx="8" fill="#888"/>
-        <rect x="262" y="650" width="500" height="16" rx="8" fill="#888"/>
-        <rect x="262" y="700" width="200" height="16" rx="8" fill="#888"/>
+    <g opacity="0.9">
+        <rect x="342" y="340" width="180" height="18" rx="9" fill="#007AFF"/>
+        <rect x="342" y="380" width="100" height="10" rx="5" fill="#C7C7CC"/>
+        <rect x="342" y="430" width="360" height="10" rx="5" fill="#8E8E93"/>
+        <rect x="342" y="455" width="340" height="10" rx="5" fill="#8E8E93"/>
+        <rect x="610" y="455" width="60" height="10" rx="5" fill="#FF9500"/>
+        <rect x="342" y="480" width="300" height="10" rx="5" fill="#8E8E93"/>
+        <rect x="342" y="520" width="380" height="60" rx="8" fill="#F2F2F7"/>
+        <rect x="362" y="535" width="200" height="8" rx="4" fill="#34C759"/>
+        <rect x="362" y="555" width="150" height="8" rx="4" fill="#8E8E93"/>
+        <rect x="342" y="610" width="380" height="10" rx="5" fill="#8E8E93"/>
+        <rect x="342" y="635" width="200" height="10" rx="5" fill="#8E8E93"/>
     </g>
 </svg>
