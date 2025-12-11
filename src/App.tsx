@@ -34,6 +34,7 @@ function App() {
   const lastSavedContent = useRef('');
   const [blurEditorSignal, setBlurEditorSignal] = useState(0);
   const [focusEditorSignal, setFocusEditorSignal] = useState(0);
+  const [isContentLoading, setIsContentLoading] = useState(false);
   const editorAreaRef = useRef<HTMLDivElement>(null);
   const systemTheme = useSystemTheme(settings.themeMode === 'system');
   const [hasLoadedSettings, setHasLoadedSettings] = useState(false);
@@ -153,10 +154,12 @@ function App() {
     async (path: string) => {
       const proceed = await confirmDirtyFlow();
       if (!proceed) return false;
+      setIsContentLoading(true);
       try {
         const fileContent = (await invoke<string>('read_file', {
           path,
         })) as string;
+        await new Promise((resolve) => setTimeout(resolve, 100));
         markClean(fileContent, path);
         setContent(fileContent);
         setBlurEditorSignal(Date.now());
@@ -165,6 +168,8 @@ function App() {
       } catch (error) {
         alert(`Failed to open file: ${error}`);
         return false;
+      } finally {
+        setIsContentLoading(false);
       }
     },
     [confirmDirtyFlow, markClean, scrollEditorToTop],
@@ -267,7 +272,7 @@ function App() {
 
   return (
     <div className="app-shell">
-      <div className="editor-area" ref={editorAreaRef}>
+      <div className={`editor-area ${isContentLoading ? 'loading' : ''}`} ref={editorAreaRef}>
         <Editor
           value={content}
           onChange={handleContentChange}
