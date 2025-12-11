@@ -153,6 +153,7 @@ function App() {
         setContent(fileContent);
         setBlurEditorSignal(Date.now());
         if (editorAreaRef.current) {
+          console.log('Scrolling to top');
           editorAreaRef.current.scrollTo({ top: 0 });
         }
         return true;
