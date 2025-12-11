@@ -13,7 +13,7 @@ type EditorStats = {
 };
 
 const UNTITLED = "Untitled.md";
-const NEW_CONTENT = "";
+const NEW_CONTENT = "###";
 
 const getFileName = (path: string | null) => {
   if (!path) return UNTITLED;

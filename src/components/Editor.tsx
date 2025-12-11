@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Markdown } from '@tiptap/markdown'
-import { Placeholder } from '@tiptap/extensions'
 
 type Props = {
   value: string;
@@ -31,9 +30,6 @@ function Editor({ value, onChange, onStatsChange, blurSignal }: Props) {
           style: 'space', // 'space' or 'tab'
           size: 2, // Number of spaces or tabs
         },
-      }),
-      Placeholder.configure({
-        placeholder: "Start writing…",
       }),
     ],
     onCreate: ({ editor }) => {
