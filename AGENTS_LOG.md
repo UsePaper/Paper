@@ -41,3 +41,13 @@
 #### 2025 12 10 – Codex
 - Granted `core:window:allow-destroy` permission in `src-tauri/capabilities/default.json` so the app can close windows without permission errors.
 - Fixed word count staying at zero after opening a file by recalculating stats whenever external content changes in `src/components/Editor.tsx`.
+- Added an open-file blur signal so newly opened documents start unfocused (preview/read-only feel) by blurring the editor after load.
+- Added document-level click handler to blur the editor when clicking outside the surface for an explicit preview mode feel.
+- Adjusted blur logic to target clicks outside the editor content area specifically, keeping in-content clicks focused while allowing padding/other UI to defocus.
+- Replaced the native Quit menu item with a custom one that emits an event; now Cmd+Q runs the same unsaved-changes confirm flow and only destroys the window after approval.
+- Routed Cmd+Q through the window close lifecycle so only one unsaved-changes prompt appears (shared `confirmDirtyFlow`), avoiding duplicate save dialogs.
+- Renamed the Paper menu Settings item to Preferences in `src-tauri/src/lib.rs` (touching Agent 1's native menu setup) to match the requested wording.
+- Updated `src/components/SettingsModal.tsx` copy to say Preferences (modal title, aria label, and close button) for consistency with the menu wording (touching Agent 2's settings UI).
+- Disabled text selection for UI chrome globally (with vendor prefixes) while keeping editor and form controls selectable in `src/styles/global.css` to match native-feeling menus and labels.
+- Added initial/editor-focus signaling so the editor auto-focuses on launch and after creating a new document by passing a `focusSignal` into `Editor` from `App` (touching Editor/App owned by prior frontend agent).
+- Guarded editor focus to wait for the TipTap view to mount before calling `focus()` (using rAF retry) to avoid `view['hasFocus']` errors when auto-focusing.
