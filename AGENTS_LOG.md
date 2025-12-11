@@ -67,3 +67,4 @@
 - Reset scroll to the top when opening a file by tracking the editor container in `src/App.tsx`, so newly opened documents start at the beginning.
 - Modularized theme handling with `useSystemTheme` and `useApplyTheme` hooks to DRY up class toggling, native theme sync, and caching logic used in `src/App.tsx`.
 - Consolidated open-file logic into a single `loadFilePath` helper in `src/App.tsx` so dialogs, startup files, and menu events share the same flow and scrolling reset.
+- Fixed "System" theme toggle sticking to the last manual choice by letting `setTheme` revert to OS defaults in system mode and only tracking media query changes when system mode is active.

@@ -35,7 +35,7 @@ function App() {
   const [blurEditorSignal, setBlurEditorSignal] = useState(0);
   const [focusEditorSignal, setFocusEditorSignal] = useState(() => Date.now());
   const editorAreaRef = useRef<HTMLDivElement>(null);
-  const systemTheme = useSystemTheme();
+  const systemTheme = useSystemTheme(settings.themeMode === 'system');
   const [hasLoadedSettings, setHasLoadedSettings] = useState(false);
 
   useEffect(() => {
