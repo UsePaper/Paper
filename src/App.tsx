@@ -13,6 +13,7 @@ type EditorStats = {
 };
 
 const UNTITLED = "Untitled.md";
+const NEW_CONTENT = "";
 
 const getFileName = (path: string | null) => {
   if (!path) return UNTITLED;
@@ -21,7 +22,7 @@ const getFileName = (path: string | null) => {
 };
 
 function App() {
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(NEW_CONTENT);
   const [currentFilePath, setCurrentFilePath] = useState<string | null>(null);
   const [documentTitle, setDocumentTitle] = useState<string>(UNTITLED);
   const [isDirty, setIsDirty] = useState(false);
@@ -143,8 +144,8 @@ function App() {
   const handleNew = useCallback(async () => {
     const proceed = await confirmDirtyFlow();
     if (!proceed) return;
-    setContent("");
-    markClean("", null);
+    markClean(NEW_CONTENT, null);
+    setContent(NEW_CONTENT);
   }, [confirmDirtyFlow, markClean]);
 
   const handleOpen = useCallback(async () => {
