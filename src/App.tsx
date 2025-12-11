@@ -2,12 +2,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { confirm } from '@tauri-apps/plugin-dialog';
 import { getCurrentWindow } from '@tauri-apps/api/window';
-import { setTheme as setNativeTheme } from '@tauri-apps/api/app';
 import { listen } from '@tauri-apps/api/event';
 import Editor from './components/Editor';
 import StatusBar from './components/StatusBar';
 import SettingsModal from './components/SettingsModal';
 import { defaultSettings, loadSavedSettings, persistSettings, Settings } from './settings';
+import { useApplyTheme, useSystemTheme } from './hooks/theme';
 
 type EditorStats = {
   wordCount: number;
@@ -35,18 +35,8 @@ function App() {
   const [blurEditorSignal, setBlurEditorSignal] = useState(0);
   const [focusEditorSignal, setFocusEditorSignal] = useState(() => Date.now());
   const editorAreaRef = useRef<HTMLDivElement>(null);
-  const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>(() => {
-    if (typeof window === 'undefined') return 'light';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  });
+  const systemTheme = useSystemTheme();
   const [hasLoadedSettings, setHasLoadedSettings] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia('(prefers-color-scheme: dark)');
-    const listener = (event: MediaQueryListEvent) => setSystemTheme(event.matches ? 'dark' : 'light');
-    media.addEventListener('change', listener);
-    return () => media.removeEventListener('change', listener);
-  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -71,22 +61,7 @@ function App() {
 
   const appliedTheme = settings.themeMode === 'system' ? systemTheme : settings.themeMode;
 
-  useEffect(() => {
-    const root = document.documentElement;
-    const themeClass = appliedTheme === 'dark' ? 'theme-dark' : 'theme-light';
-    root.classList.remove('theme-light', 'theme-dark');
-    root.classList.add(themeClass);
-    root.style.colorScheme = appliedTheme === 'dark' ? 'dark' : 'light';
-    if (typeof window !== 'undefined') {
-      setNativeTheme(appliedTheme).catch((error) => console.error('Failed to set native theme', error));
-    }
-    try {
-      localStorage.setItem('paper-theme-mode', settings.themeMode);
-      localStorage.setItem('paper-resolved-theme', appliedTheme);
-    } catch (error) {
-      console.error('Failed to cache theme', error);
-    }
-  }, [appliedTheme, settings.themeMode]);
+  useApplyTheme(appliedTheme, settings.themeMode);
 
   // Update native window title
   useEffect(() => {

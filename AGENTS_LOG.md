@@ -65,3 +65,4 @@
 - Cached the selected and resolved theme in `localStorage` from `src/App.tsx` so subsequent launches can paint with the correct palette immediately.
 - Synced the native window/dialog theme to the resolved app theme using Tauri's `setTheme` when settings change, keeping chrome consistent.
 - Reset scroll to the top when opening a file by tracking the editor container in `src/App.tsx`, so newly opened documents start at the beginning.
+- Modularized theme handling with `useSystemTheme` and `useApplyTheme` hooks to DRY up class toggling, native theme sync, and caching logic used in `src/App.tsx`.
