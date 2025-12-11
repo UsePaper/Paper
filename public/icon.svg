@@ -1,0 +1,34 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <filter id="paperShadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="24"/>
+            <feOffset dx="0" dy="20" result="offsetblur"/>
+            <feFlood flood-color="#000000" flood-opacity="0.15"/>
+            <feComposite in2="offsetblur" operator="in"/>
+            <feMerge>
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+        <linearGradient id="paperGradient" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#FFFFFF"/>
+            <stop offset="1" stop-color="#F2F2F2"/>
+        </linearGradient>
+    </defs>
+
+    <g filter="url(#paperShadow)">
+        <path d="M162 900 V 180 Q 162 140 202 140 H 662 L 862 340 V 900 Q 862 940 822 940 H 202 Q 162 940 162 900 Z" fill="url(#paperGradient)"/>
+        <path d="M662 140 V 300 Q 662 340 702 340 H 862 L 662 140 Z" fill="#E8E8E8"/>
+        <path d="M662 140 L 862 340 L 662 340 L 662 140 Z" fill="black" fill-opacity="0.05"/>
+    </g>
+
+    <g opacity="0.6">
+        <rect x="262" y="300" width="300" height="24" rx="12" fill="#333"/>
+        <rect x="262" y="400" width="500" height="16" rx="8" fill="#888"/>
+        <rect x="262" y="450" width="480" height="16" rx="8" fill="#888"/>
+        <rect x="262" y="500" width="460" height="16" rx="8" fill="#888"/>
+        <rect x="262" y="550" width="490" height="16" rx="8" fill="#888"/>
+        <rect x="262" y="650" width="500" height="16" rx="8" fill="#888"/>
+        <rect x="262" y="700" width="200" height="16" rx="8" fill="#888"/>
+    </g>
+</svg>

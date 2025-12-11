@@ -1,31 +1,73 @@
 <svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background Squircle -->
-  <rect x="0" y="0" width="1024" height="1024" rx="224" fill="#0969da"/>
-  
-  <!-- Paper Sheet -->
-  <g filter="url(#shadow)">
-    <path d="M256 200 H 640 L 768 328 V 824 A 32 32 0 0 1 736 856 H 256 A 32 32 0 0 1 224 824 V 232 A 32 32 0 0 1 256 200 Z" fill="white"/>
-    <!-- Folded Corner -->
-    <path d="M640 200 V 328 H 768" fill="#d0d7de"/>
-  </g>
+    <defs>
+        <!-- Soft drop shadow for the main paper -->
+        <filter id="paperShadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="24"/>
+            <feOffset dx="0" dy="20" result="offsetblur"/>
+            <feFlood flood-color="#000000" flood-opacity="0.15"/>
+            <feComposite in2="offsetblur" operator="in"/>
+            <feMerge>
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+        
+        <!-- Gradient for the paper surface for subtle realism -->
+        <linearGradient id="paperGradient" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#FFFFFF"/>
+            <stop offset="1" stop-color="#F2F2F2"/>
+        </linearGradient>
 
-  <!-- Fake Text Lines -->
-  <rect x="320" y="320" width="280" height="24" rx="12" fill="#f0f0f0"/>
-  <rect x="320" y="400" width="400" height="24" rx="12" fill="#f0f0f0"/>
-  <rect x="320" y="480" width="360" height="24" rx="12" fill="#f0f0f0"/>
-  <rect x="320" y="560" width="380" height="24" rx="12" fill="#f0f0f0"/>
-  <rect x="320" y="640" width="200" height="24" rx="12" fill="#f0f0f0"/>
-  
-  <!-- Definitions for Shadow -->
-  <defs>
-    <filter id="shadow" x="150" y="150" width="700" height="800" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-      <feOffset dy="12"/>
-      <feGaussianBlur stdDeviation="24"/>
-      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
-      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
-      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
-    </filter>
-  </defs>
+        <!-- Shadow under the folded corner -->
+        <filter id="foldShadow" x="-50%" y="-50%" width="200%" height="200%">
+             <feGaussianBlur in="SourceAlpha" stdDeviation="8"/>
+             <feOffset dx="-4" dy="4"/>
+             <feFlood flood-color="#000000" flood-opacity="0.2"/>
+             <feComposite in2="SourceAlpha" operator="in"/>
+        </filter>
+    </defs>
+
+    <!-- 
+        Main Paper Shape: 
+        Centered, slightly smaller than full canvas to avoid "oversized" look.
+        Width: 700, Height: 860.
+    -->
+    <g filter="url(#paperShadow)">
+        <!-- The main sheet, with top-right corner cut -->
+        <path d="M162 900 
+                 V 180 
+                 Q 162 140 202 140 
+                 H 662 
+                 L 862 340 
+                 V 900 
+                 Q 862 940 822 940 
+                 H 202 
+                 Q 162 940 162 900 Z" 
+              fill="url(#paperGradient)"/>
+              
+        <!-- The folded corner -->
+        <path d="M662 140 
+                 V 300 
+                 Q 662 340 702 340 
+                 H 862 
+                 L 662 140 Z" 
+              fill="#E8E8E8"/>
+              
+        <!-- Darker shade for the fold to simulate depth -->
+        <path d="M662 140 L 862 340 L 662 340 L 662 140 Z" fill="black" fill-opacity="0.05"/>
+    </g>
+
+    <!-- Minimalist Content: Abstract Text Lines -->
+    <!-- Mimics the 'document' feel without being cluttered -->
+    <g opacity="0.6">
+        <rect x="262" y="300" width="300" height="24" rx="12" fill="#333"/> <!-- Title-like line -->
+        
+        <rect x="262" y="400" width="500" height="16" rx="8" fill="#888"/>
+        <rect x="262" y="450" width="480" height="16" rx="8" fill="#888"/>
+        <rect x="262" y="500" width="460" height="16" rx="8" fill="#888"/>
+        <rect x="262" y="550" width="490" height="16" rx="8" fill="#888"/>
+        
+        <rect x="262" y="650" width="500" height="16" rx="8" fill="#888"/>
+        <rect x="262" y="700" width="200" height="16" rx="8" fill="#888"/>
+    </g>
 </svg>
