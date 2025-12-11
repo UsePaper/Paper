@@ -9,6 +9,7 @@ type Props = {
   onStatsChange?: (stats: { wordCount: number }) => void;
   blurSignal?: number;
   focusSignal?: number;
+  onContentReady?: () => void;
 };
 
 const countWords = (text: string) => {
@@ -17,7 +18,7 @@ const countWords = (text: string) => {
   return trimmed.split(/\s+/).length;
 };
 
-function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal }: Props) {
+function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal, onContentReady }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
   const editor = useEditor({
     extensions: [
@@ -55,8 +56,14 @@ function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal }: Pro
     const currentMarkdown = editor.getMarkdown();
     if (value !== currentMarkdown) {
       editor.commands.setContent(value, { emitUpdate: false, contentType: 'markdown' });
+      // Wait for TipTap to finish rendering
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          onContentReady?.();
+        });
+      });
     }
-  }, [editor, value]);
+  }, [editor, value, onContentReady]);
 
   useEffect(() => {
     if (!editor || !onStatsChange) return;

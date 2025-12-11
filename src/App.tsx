@@ -36,6 +36,9 @@ function App() {
   const [focusEditorSignal, setFocusEditorSignal] = useState(0);
   const [isContentLoading, setIsContentLoading] = useState(false);
   const editorAreaRef = useRef<HTMLDivElement>(null);
+  const pendingScrollToTop = useRef(false);
+  // Delay in ms before showing content after scroll - matches CSS transition
+  const SCROLL_HIDE_DELAY_MS = 100;
   const systemTheme = useSystemTheme(settings.themeMode === 'system');
   const [hasLoadedSettings, setHasLoadedSettings] = useState(false);
 
@@ -68,16 +71,26 @@ function App() {
     const area = editorAreaRef.current;
     if (!area) return;
     area.scrollTo({ top: 0 });
-    requestAnimationFrame(() => area.scrollTo({ top: 0 }));
     window.scrollTo({ top: 0 });
   }, []);
+
+  const handleContentReady = useCallback(() => {
+    if (!pendingScrollToTop.current) return;
+    pendingScrollToTop.current = false;
+    // Scroll while content is still hidden (opacity: 0)
+    scrollEditorToTop();
+    // Wait for scroll to complete, then reveal content
+    setTimeout(() => {
+      setIsContentLoading(false);
+    }, SCROLL_HIDE_DELAY_MS);
+  }, [scrollEditorToTop]);
 
   // Update native window title
   useEffect(() => {
     const title = isDirty ? `${documentTitle} •` : documentTitle;
     getCurrentWindow()
       .setTitle(title)
-      .then((_) => {});
+      .then((_) => { });
   }, [documentTitle, isDirty]);
 
   const markClean = useCallback(
@@ -155,24 +168,24 @@ function App() {
       const proceed = await confirmDirtyFlow();
       if (!proceed) return false;
       setIsContentLoading(true);
+      pendingScrollToTop.current = true;
       try {
         const fileContent = (await invoke<string>('read_file', {
           path,
         })) as string;
-        await new Promise((resolve) => setTimeout(resolve, 100));
         markClean(fileContent, path);
         setContent(fileContent);
         setBlurEditorSignal(Date.now());
-        scrollEditorToTop();
+        // Scroll and loading state handled by handleContentReady callback
         return true;
       } catch (error) {
         alert(`Failed to open file: ${error}`);
-        return false;
-      } finally {
+        pendingScrollToTop.current = false;
         setIsContentLoading(false);
+        return false;
       }
     },
-    [confirmDirtyFlow, markClean, scrollEditorToTop],
+    [confirmDirtyFlow, markClean],
   );
 
   const handleOpen = useCallback(async () => {
@@ -215,16 +228,16 @@ function App() {
     const unlisten = listen<string>('menu-event', (event) => {
       switch (event.payload) {
         case 'new':
-          handleNew().then((_) => {});
+          handleNew().then((_) => { });
           break;
         case 'open':
-          handleOpen().then((_) => {});
+          handleOpen().then((_) => { });
           break;
         case 'save':
-          handleSave().then((_) => {});
+          handleSave().then((_) => { });
           break;
         case 'save_as':
-          handleSaveAs().then((_) => {});
+          handleSaveAs().then((_) => { });
           break;
         case 'toggle_status_bar':
           setShowStatusBar((prev) => !prev);
@@ -235,7 +248,7 @@ function App() {
         case 'quit':
           getCurrentWindow()
             .close()
-            .then((_) => {});
+            .then((_) => { });
           break;
       }
     });
@@ -247,7 +260,7 @@ function App() {
 
   useEffect(() => {
     if (!hasLoadedSettings) return;
-    persistSettings(settings).then((_) => {});
+    persistSettings(settings).then((_) => { });
   }, [settings, hasLoadedSettings]);
 
   useEffect(() => {
@@ -279,6 +292,7 @@ function App() {
           onStatsChange={handleStatsChange}
           blurSignal={blurEditorSignal}
           focusSignal={focusEditorSignal}
+          onContentReady={handleContentReady}
         />
       </div>
       {showStatusBar && <StatusBar wordCount={wordCount} />}
