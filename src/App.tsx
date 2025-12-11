@@ -28,7 +28,6 @@ function App() {
   const [documentTitle, setDocumentTitle] = useState<string>(UNTITLED);
   const [isDirty, setIsDirty] = useState(false);
   const [wordCount, setWordCount] = useState(0);
-  const [showStatusBar, setShowStatusBar] = useState(true);
   const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const lastSavedContent = useRef('');
@@ -249,7 +248,7 @@ function App() {
           handleSaveAs().then((_) => { });
           break;
         case 'toggle_status_bar':
-          setShowStatusBar((prev) => !prev);
+          setSettings((prev) => ({ ...prev, showStatusBar: !prev.showStatusBar }));
           break;
         case 'settings':
           setSettingsOpen(true);
@@ -304,7 +303,7 @@ function App() {
           onContentReady={handleContentReady}
         />
       </div>
-      {showStatusBar && <StatusBar wordCount={wordCount} />}
+      {settings.showStatusBar && <StatusBar wordCount={wordCount} />}
       <SettingsModal
         open={settingsOpen}
         settings={settings}

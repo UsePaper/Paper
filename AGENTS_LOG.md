@@ -69,3 +69,7 @@
 - Consolidated open-file logic into a single `loadFilePath` helper in `src/App.tsx` so dialogs, startup files, and menu events share the same flow and scrolling reset.
 - Fixed "System" theme toggle sticking to the last manual choice by letting `setTheme` revert to OS defaults in system mode and only tracking media query changes when system mode is active.
 - Addressed scroll reset timing by forcing a double-pass scroll-to-top (via rAF) and window scroll reset after opening files so the editor reliably starts at the top even when TipTap re-renders at the old position.
+
+#### 2025 12 11 – Codex
+
+- Persisted the status bar visibility preference by adding `showStatusBar` to the settings model, saving it through the Tauri settings file, and wiring the View menu toggle to update settings so the choice sticks across launches and resets to defaults.

@@ -8,12 +8,27 @@ use tauri::{AppHandle, Manager};
 const SETTINGS_FILE: &str = "settings.json";
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(default)]
 pub struct StoredSettings {
     pub font_family: String,
     pub font_size: f32,
     pub line_height: f32,
     pub content_width: f32,
     pub theme_mode: String,
+    pub show_status_bar: bool,
+}
+
+impl Default for StoredSettings {
+    fn default() -> Self {
+        Self {
+            font_family: "System".into(),
+            font_size: 16.0,
+            line_height: 1.6,
+            content_width: 800.0,
+            theme_mode: "system".into(),
+            show_status_bar: true,
+        }
+    }
 }
 
 /// Read a UTF-8 file from disk.

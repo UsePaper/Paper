@@ -8,6 +8,7 @@ export type Settings = {
   lineHeight: number;
   contentWidth: number;
   themeMode: ThemeMode;
+  showStatusBar: boolean;
 };
 
 export const defaultSettings: Settings = {
@@ -16,6 +17,7 @@ export const defaultSettings: Settings = {
   lineHeight: 1.6,
   contentWidth: 800,
   themeMode: 'system',
+  showStatusBar: true,
 };
 
 export const normalizeSettings = (input: any): Settings => {
@@ -30,6 +32,7 @@ export const normalizeSettings = (input: any): Settings => {
   if ('line_height' in input) mapped.lineHeight = Number((input as any).line_height);
   if ('content_width' in input) mapped.contentWidth = Number((input as any).content_width);
   if ('theme_mode' in input) mapped.themeMode = (input as any).theme_mode;
+  if ('show_status_bar' in input) mapped.showStatusBar = Boolean((input as any).show_status_bar);
 
   return {
     ...defaultSettings,
@@ -56,6 +59,7 @@ export const persistSettings = async (settings: Settings) => {
         line_height: settings.lineHeight,
         content_width: settings.contentWidth,
         theme_mode: settings.themeMode,
+        show_status_bar: settings.showStatusBar,
       },
     });
   } catch (error) {
