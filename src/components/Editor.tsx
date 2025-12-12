@@ -74,7 +74,7 @@ function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal, onCon
   useEffect(() => {
     if (!editor || !onStatsChange) return;
     onStatsChange({ wordCount: countWords(editor.getText()) });
-  }, [editor, onStatsChange]);
+  }, [editor, onStatsChange, value]);
 
   useEffect(() => {
     if (!editor || !blurSignal) return;
