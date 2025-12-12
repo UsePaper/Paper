@@ -58,6 +58,7 @@ function App() {
     const root = document.documentElement;
     const fontFamily = settings.fontFamily === 'System' ? 'var(--font-body)' : settings.fontFamily;
     root.style.setProperty('--editor-font-family', fontFamily);
+    root.style.setProperty('--font-mono', settings.monoFontFamily);
     root.style.setProperty('--editor-font-size', `${settings.fontSize}px`);
     root.style.setProperty('--editor-line-height', `${settings.lineHeight}`);
     root.style.setProperty('--editor-content-width', `${settings.contentWidth}px`);
@@ -301,6 +302,7 @@ function App() {
           blurSignal={blurEditorSignal}
           focusSignal={focusEditorSignal}
           onContentReady={handleContentReady}
+          monoFontFamily={settings.monoFontFamily}
         />
       </div>
       {settings.showStatusBar && <StatusBar wordCount={wordCount} />}

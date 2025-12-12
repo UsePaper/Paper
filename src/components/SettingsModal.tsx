@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { AVAILABLE_FONTS, Settings, ThemeMode, defaultSettings } from '../settings';
+import { AVAILABLE_FONTS, AVAILABLE_MONO_FONTS, Settings, ThemeMode, defaultSettings } from '../settings';
 
 type Props = {
   open: boolean;
@@ -67,6 +67,20 @@ function SettingsModal({ open, settings, onClose, onChange }: Props) {
               onChange={(event) => onChange({ ...settings, fontFamily: event.target.value })}
             >
               {AVAILABLE_FONTS.map((font) => (
+                <option key={font.value} value={font.value}>
+                  {font.label}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="settings-field">
+            <span>Mono Font</span>
+            <select
+              value={settings.monoFontFamily}
+              onChange={(event) => onChange({ ...settings, monoFontFamily: event.target.value })}
+            >
+              {AVAILABLE_MONO_FONTS.map((font) => (
                 <option key={font.value} value={font.value}>
                   {font.label}
                 </option>

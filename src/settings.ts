@@ -4,6 +4,7 @@ export type ThemeMode = 'system' | 'light' | 'dark';
 
 export type Settings = {
   fontFamily: string;
+  monoFontFamily: string;
   fontSize: number;
   lineHeight: number;
   contentWidth: number;
@@ -13,6 +14,8 @@ export type Settings = {
 
 export const defaultSettings: Settings = {
   fontFamily: "'EB Garamond', serif",
+  monoFontFamily:
+    "'Ubuntu Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace",
   fontSize: 16,
   lineHeight: 1.6,
   contentWidth: 800,
@@ -28,6 +31,7 @@ export const normalizeSettings = (input: any): Settings => {
   const mapped: Partial<Settings> = { ...input };
 
   if ('font_family' in input) mapped.fontFamily = (input as any).font_family;
+  if ('mono_font_family' in input) mapped.monoFontFamily = (input as any).mono_font_family;
   if ('font_size' in input) mapped.fontSize = Number((input as any).font_size);
   if ('line_height' in input) mapped.lineHeight = Number((input as any).line_height);
   if ('content_width' in input) mapped.contentWidth = Number((input as any).content_width);
@@ -55,6 +59,7 @@ export const persistSettings = async (settings: Settings) => {
     await invoke('save_settings', {
       settings: {
         font_family: settings.fontFamily,
+        mono_font_family: settings.monoFontFamily,
         font_size: settings.fontSize,
         line_height: settings.lineHeight,
         content_width: settings.contentWidth,
@@ -72,5 +77,19 @@ export const AVAILABLE_FONTS: { label: string; value: string }[] = [
   { label: 'System', value: 'System' },
   { label: 'Serif (Georgia)', value: "Georgia, 'Times New Roman', serif" },
   { label: 'Sans (Helvetica)', value: 'Helvetica Neue, Helvetica, Arial, sans-serif' },
-  { label: 'Mono (SF Mono)', value: "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace" },
+  {
+    label: 'Mono (Ubuntu Mono)',
+    value: "'Ubuntu Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace",
+  },
+];
+
+export const AVAILABLE_MONO_FONTS: { label: string; value: string }[] = [
+  {
+    label: 'Ubuntu Mono',
+    value: "'Ubuntu Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace",
+  },
+  {
+    label: 'SF Mono / System',
+    value: "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace",
+  },
 ];

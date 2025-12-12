@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { Markdown } from '@tiptap/markdown';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { Markdown } from '@tiptap/markdown';
+import { useEffect, useRef } from 'react';
 
 type Props = {
   value: string;
@@ -10,6 +10,7 @@ type Props = {
   blurSignal?: number;
   focusSignal?: number;
   onContentReady?: () => void;
+  monoFontFamily?: string;
 };
 
 const countWords = (text: string) => {
@@ -18,7 +19,10 @@ const countWords = (text: string) => {
   return trimmed.split(/\s+/).length;
 };
 
-function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal, onContentReady }: Props) {
+const DEFAULT_MONO_FONT =
+  "'Ubuntu Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace";
+
+function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal, onContentReady, monoFontFamily }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
   const editor = useEditor({
     extensions: [
@@ -35,7 +39,10 @@ function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal, onCon
       }),
     ],
     onCreate: ({ editor }) => {
-      editor.commands.setContent(value, { emitUpdate: false, contentType: 'markdown' });
+      editor.commands.setContent(value, {
+        emitUpdate: false,
+        contentType: 'markdown',
+      });
     },
     onUpdate: ({ editor: tiptap }) => {
       const markdown = tiptap.getMarkdown();
@@ -55,7 +62,10 @@ function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal, onCon
     if (!editor) return;
     const currentMarkdown = editor.getMarkdown();
     if (value !== currentMarkdown) {
-      editor.commands.setContent(value, { emitUpdate: false, contentType: 'markdown' });
+      editor.commands.setContent(value, {
+        emitUpdate: false,
+        contentType: 'markdown',
+      });
       // Wait for TipTap to finish rendering
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -68,7 +78,7 @@ function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal, onCon
   useEffect(() => {
     if (!editor || !onStatsChange) return;
     onStatsChange({ wordCount: countWords(editor.getText()) });
-  }, [editor, onStatsChange, value]);
+  }, [editor, onStatsChange]);
 
   useEffect(() => {
     if (!editor || !blurSignal) return;
@@ -110,7 +120,14 @@ function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal, onCon
   }
 
   return (
-    <div className="editor-surface">
+    <div
+      className="editor-surface"
+      style={
+        {
+          '--font-mono': monoFontFamily || DEFAULT_MONO_FONT,
+        } as React.CSSProperties
+      }
+    >
       <EditorContent editor={editor} ref={contentRef} />
     </div>
   );
