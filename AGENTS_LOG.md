@@ -79,3 +79,5 @@
 - Added `monoFontFamily` to the settings model with Ubuntu Mono as default, including load/save normalization in `src/settings.ts`.
 - Applied the mono font setting to TipTap via the `--font-mono` CSS variable in `src/App.tsx` and a fallback override in `src/components/Editor.tsx`.
 - Exposed a Mono Font selector in Preferences (`src/components/SettingsModal.tsx`) backed by `AVAILABLE_MONO_FONTS`.
+- Loaded the Ubuntu Mono webfont in `index.html` alongside EB Garamond so mono text renders consistently out of the box.
+- Bundled EB Garamond and Ubuntu Mono locally from `src/assets/fonts/` with `@font-face` rules in `src/styles/theme.css`, and removed Google Fonts links from `index.html`.
