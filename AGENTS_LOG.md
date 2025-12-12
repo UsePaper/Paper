@@ -73,3 +73,9 @@
 #### 2025 12 11 – Codex
 
 - Persisted the status bar visibility preference by adding `showStatusBar` to the settings model, saving it through the Tauri settings file, and wiring the View menu toggle to update settings so the choice sticks across launches and resets to defaults.
+
+#### 2025 12 12 – Codex
+
+- Added `monoFontFamily` to the settings model with Ubuntu Mono as default, including load/save normalization in `src/settings.ts`.
+- Applied the mono font setting to TipTap via the `--font-mono` CSS variable in `src/App.tsx` and a fallback override in `src/components/Editor.tsx`.
+- Exposed a Mono Font selector in Preferences (`src/components/SettingsModal.tsx`) backed by `AVAILABLE_MONO_FONTS`.
