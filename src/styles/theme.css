@@ -1,79 +1,15 @@
 @font-face {
   font-family: 'EB Garamond';
-  src: url('../assets/fonts/EB_Garamond/EBGaramond-Regular.woff2') format('woff2');
-  font-weight: 400;
+  src: url('../assets/fonts/EB_Garamond/EBGaramond-VariableFont_wght.woff2') format('woff2');
+  font-weight: 400 800;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
   font-family: 'EB Garamond';
-  src: url('../assets/fonts/EB_Garamond/EBGaramond-Italic.woff2') format('woff2');
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'EB Garamond';
-  src: url('../assets/fonts/EB_Garamond/EBGaramond-Medium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'EB Garamond';
-  src: url('../assets/fonts/EB_Garamond/EBGaramond-MediumItalic.woff2') format('woff2');
-  font-weight: 500;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'EB Garamond';
-  src: url('../assets/fonts/EB_Garamond/EBGaramond-SemiBold.woff2') format('woff2');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'EB Garamond';
-  src: url('../assets/fonts/EB_Garamond/EBGaramond-SemiBoldItalic.woff2') format('woff2');
-  font-weight: 600;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'EB Garamond';
-  src: url('../assets/fonts/EB_Garamond/EBGaramond-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'EB Garamond';
-  src: url('../assets/fonts/EB_Garamond/EBGaramond-BoldItalic.woff2') format('woff2');
-  font-weight: 700;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'EB Garamond';
-  src: url('../assets/fonts/EB_Garamond/EBGaramond-ExtraBold.woff2') format('woff2');
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'EB Garamond';
-  src: url('../assets/fonts/EB_Garamond/EBGaramond-ExtraBoldItalic.woff2') format('woff2');
-  font-weight: 800;
+  src: url('../assets/fonts/EB_Garamond/EBGaramond-Italic-VariableFont_wght.woff2') format('woff2');
+  font-weight: 400 800;
   font-style: italic;
   font-display: swap;
 }

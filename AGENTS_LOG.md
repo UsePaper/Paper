@@ -83,3 +83,4 @@
 - Bundled EB Garamond and Ubuntu Mono locally from `src/assets/fonts/` with `@font-face` rules in `src/styles/theme.css`, and removed Google Fonts links from `index.html`.
 - Removed inline `--font-mono` style overrides in `src/components/Editor.tsx`, relying on the global CSS variable set from settings.
 - Added `fontWeight` to settings with default 500, exposed it in Preferences, and applied via `--editor-font-weight` CSS variable.
+- Switched EB Garamond `@font-face` to use local variable `.woff2` files for a continuous 400–800 weight range.
