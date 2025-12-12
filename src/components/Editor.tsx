@@ -10,7 +10,6 @@ type Props = {
   blurSignal?: number;
   focusSignal?: number;
   onContentReady?: () => void;
-  monoFontFamily?: string;
 };
 
 const countWords = (text: string) => {
@@ -19,10 +18,7 @@ const countWords = (text: string) => {
   return trimmed.split(/\s+/).length;
 };
 
-const DEFAULT_MONO_FONT =
-  "'Ubuntu Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace";
-
-function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal, onContentReady, monoFontFamily }: Props) {
+function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal, onContentReady }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
   const editor = useEditor({
     extensions: [

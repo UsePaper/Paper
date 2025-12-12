@@ -302,7 +302,6 @@ function App() {
           blurSignal={blurEditorSignal}
           focusSignal={focusEditorSignal}
           onContentReady={handleContentReady}
-          monoFontFamily={settings.monoFontFamily}
         />
       </div>
       {settings.showStatusBar && <StatusBar wordCount={wordCount} />}
