@@ -12,7 +12,7 @@ export type Settings = {
 };
 
 export const defaultSettings: Settings = {
-  fontFamily: 'System',
+  fontFamily: "'Instrument Serif', serif",
   fontSize: 16,
   lineHeight: 1.6,
   contentWidth: 800,
@@ -68,6 +68,7 @@ export const persistSettings = async (settings: Settings) => {
 };
 
 export const AVAILABLE_FONTS: { label: string; value: string }[] = [
+  { label: 'Instrument Serif', value: "'Instrument Serif', serif" },
   { label: 'System', value: 'System' },
   { label: 'Serif (Georgia)', value: "Georgia, 'Times New Roman', serif" },
   { label: 'Sans (Helvetica)', value: 'Helvetica Neue, Helvetica, Arial, sans-serif' },
