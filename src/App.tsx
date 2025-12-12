@@ -1,13 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
-import { confirm } from '@tauri-apps/plugin-dialog';
-import { getCurrentWindow } from '@tauri-apps/api/window';
 import { listen } from '@tauri-apps/api/event';
+import { getCurrentWindow } from '@tauri-apps/api/window';
+import { confirm } from '@tauri-apps/plugin-dialog';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Editor from './components/Editor';
-import StatusBar from './components/StatusBar';
 import SettingsModal from './components/SettingsModal';
-import { defaultSettings, loadSavedSettings, persistSettings, Settings } from './settings';
+import StatusBar from './components/StatusBar';
 import { useApplyTheme, useSystemTheme } from './hooks/theme';
+import { defaultSettings, loadSavedSettings, persistSettings, Settings } from './settings';
 
 type EditorStats = {
   wordCount: number;
@@ -97,7 +97,7 @@ function App() {
     const title = isDirty ? `${documentTitle} •` : documentTitle;
     getCurrentWindow()
       .setTitle(title)
-      .then((_) => { });
+      .then((_) => {});
   }, [documentTitle, isDirty]);
 
   const markClean = useCallback(
@@ -238,16 +238,16 @@ function App() {
     const unlisten = listen<string>('menu-event', (event) => {
       switch (event.payload) {
         case 'new':
-          handleNew().then((_) => { });
+          handleNew().then((_) => {});
           break;
         case 'open':
-          handleOpen().then((_) => { });
+          handleOpen().then((_) => {});
           break;
         case 'save':
-          handleSave().then((_) => { });
+          handleSave().then((_) => {});
           break;
         case 'save_as':
-          handleSaveAs().then((_) => { });
+          handleSaveAs().then((_) => {});
           break;
         case 'toggle_status_bar':
           setSettings((prev) => ({ ...prev, showStatusBar: !prev.showStatusBar }));
@@ -258,7 +258,7 @@ function App() {
         case 'quit':
           getCurrentWindow()
             .close()
-            .then((_) => { });
+            .then((_) => {});
           break;
       }
     });
@@ -270,7 +270,7 @@ function App() {
 
   useEffect(() => {
     if (!hasLoadedSettings) return;
-    persistSettings(settings).then((_) => { });
+    persistSettings(settings).then((_) => {});
   }, [settings, hasLoadedSettings]);
 
   useEffect(() => {
