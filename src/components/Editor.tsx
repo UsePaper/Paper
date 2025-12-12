@@ -116,14 +116,7 @@ function Editor({ value, onChange, onStatsChange, blurSignal, focusSignal, onCon
   }
 
   return (
-    <div
-      className="editor-surface"
-      style={
-        {
-          '--font-mono': monoFontFamily || DEFAULT_MONO_FONT,
-        } as React.CSSProperties
-      }
-    >
+    <div className="editor-surface">
       <EditorContent editor={editor} ref={contentRef} />
     </div>
   );
