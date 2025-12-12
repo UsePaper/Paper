@@ -104,6 +104,21 @@ function SettingsModal({ open, settings, onClose, onChange }: Props) {
           </label>
 
           <label className="settings-field">
+            <span>Font Weight</span>
+            <input
+              type="number"
+              min={300}
+              max={800}
+              step={100}
+              value={settings.fontWeight}
+              onChange={(event) => {
+                const value = event.target.value === '' ? settings.fontWeight : Number(event.target.value);
+                onChange({ ...settings, fontWeight: value });
+              }}
+            />
+          </label>
+
+          <label className="settings-field">
             <span>Line Height</span>
             <input
               type="number"

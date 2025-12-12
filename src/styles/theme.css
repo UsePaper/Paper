@@ -132,6 +132,7 @@
   --font-mono: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
   --editor-font-family: var(--font-body);
   --editor-font-size: 16px;
+  --editor-font-weight: 500;
   --editor-line-height: 1.6;
   --editor-content-width: 800px;
 
@@ -265,6 +266,7 @@
   outline: none;
   font-family: var(--editor-font-family), serif;
   font-size: var(--editor-font-size);
+  font-weight: var(--editor-font-weight);
   line-height: var(--editor-line-height);
 }
 

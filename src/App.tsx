@@ -60,6 +60,7 @@ function App() {
     root.style.setProperty('--editor-font-family', fontFamily);
     root.style.setProperty('--font-mono', settings.monoFontFamily);
     root.style.setProperty('--editor-font-size', `${settings.fontSize}px`);
+    root.style.setProperty('--editor-font-weight', `${settings.fontWeight}`);
     root.style.setProperty('--editor-line-height', `${settings.lineHeight}`);
     root.style.setProperty('--editor-content-width', `${settings.contentWidth}px`);
   }, [settings]);

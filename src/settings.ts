@@ -6,6 +6,7 @@ export type Settings = {
   fontFamily: string;
   monoFontFamily: string;
   fontSize: number;
+  fontWeight: number;
   lineHeight: number;
   contentWidth: number;
   themeMode: ThemeMode;
@@ -17,6 +18,7 @@ export const defaultSettings: Settings = {
   monoFontFamily:
     "'Ubuntu Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace",
   fontSize: 18,
+  fontWeight: 500,
   lineHeight: 1.6,
   contentWidth: 800,
   themeMode: 'system',
@@ -33,6 +35,7 @@ export const normalizeSettings = (input: any): Settings => {
   if ('font_family' in input) mapped.fontFamily = (input as any).font_family;
   if ('mono_font_family' in input) mapped.monoFontFamily = (input as any).mono_font_family;
   if ('font_size' in input) mapped.fontSize = Number((input as any).font_size);
+  if ('font_weight' in input) mapped.fontWeight = Number((input as any).font_weight);
   if ('line_height' in input) mapped.lineHeight = Number((input as any).line_height);
   if ('content_width' in input) mapped.contentWidth = Number((input as any).content_width);
   if ('theme_mode' in input) mapped.themeMode = (input as any).theme_mode;
@@ -61,6 +64,7 @@ export const persistSettings = async (settings: Settings) => {
         font_family: settings.fontFamily,
         mono_font_family: settings.monoFontFamily,
         font_size: settings.fontSize,
+        font_weight: settings.fontWeight,
         line_height: settings.lineHeight,
         content_width: settings.contentWidth,
         theme_mode: settings.themeMode,
