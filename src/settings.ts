@@ -16,7 +16,7 @@ export const defaultSettings: Settings = {
   fontFamily: "'EB Garamond', serif",
   monoFontFamily:
     "'Ubuntu Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace",
-  fontSize: 16,
+  fontSize: 18,
   lineHeight: 1.6,
   contentWidth: 800,
   themeMode: 'system',
