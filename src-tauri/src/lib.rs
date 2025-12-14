@@ -92,10 +92,10 @@ pub fn run() {
 
             // Help
             let help_menu = Submenu::new(handle, "Help", true)?;
+            let feedback = MenuItem::with_id(handle, "feedback", "Feedback", true, None::<&str>)?;
             let changelog =
                 MenuItem::with_id(handle, "changelog", "Changelog", true, None::<&str>)?;
-            let feedback = MenuItem::with_id(handle, "feedback", "Feedback", true, None::<&str>)?;
-            help_menu.append_items(&[&changelog, &feedback])?;
+            help_menu.append_items(&[&feedback, &changelog])?;
 
             // Create the menu
             let menu = Menu::with_items(
