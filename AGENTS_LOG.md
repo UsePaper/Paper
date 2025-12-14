@@ -84,3 +84,7 @@
 - Removed inline `--font-mono` style overrides in `src/components/Editor.tsx`, relying on the global CSS variable set from settings.
 - Added `fontWeight` to settings with default 500, exposed it in Preferences, and applied via `--editor-font-weight` CSS variable.
 - Switched EB Garamond `@font-face` to use local variable `.woff2` files for a continuous 400–800 weight range.
+
+#### 2025 12 14 – Codex
+
+- Wired Help menu entries to open the Paper changelog (`https://paper.userjot.com/updates`) and feedback board (`https://paper.userjot.com/board/all`) via the opener plugin, leaving other menu events untouched.

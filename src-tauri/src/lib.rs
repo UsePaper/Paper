@@ -2,6 +2,7 @@ mod commands;
 use std::sync::Mutex;
 use tauri::menu::{Menu, MenuItem, PredefinedMenuItem, Submenu};
 use tauri::{Emitter, Manager};
+use tauri_plugin_opener::OpenerExt;
 
 struct AppState {
     pending_file: Mutex<Option<String>>,
@@ -114,6 +115,20 @@ pub fn run() {
                     || id == "quit"
                 {
                     app.emit("menu-event", id.as_ref()).unwrap();
+                } else if id == "changelog" {
+                    if let Err(error) = app
+                        .opener()
+                        .open_url("https://paper.userjot.com/updates", None::<&str>)
+                    {
+                        eprintln!("Failed to open changelog: {error}");
+                    }
+                } else if id == "feedback" {
+                    if let Err(error) = app
+                        .opener()
+                        .open_url("https://paper.userjot.com/board/all", None::<&str>)
+                    {
+                        eprintln!("Failed to open feedback board: {error}");
+                    }
                 }
             });
 
