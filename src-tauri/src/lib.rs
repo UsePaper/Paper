@@ -89,9 +89,18 @@ pub fn run() {
             )?;
             view_menu.append_items(&[&toggle_status])?;
 
+            // Help
+            let help_menu = Submenu::new(handle, "Help", true)?;
+            let changelog =
+                MenuItem::with_id(handle, "changelog", "Changelog", true, None::<&str>)?;
+            let feedback = MenuItem::with_id(handle, "feedback", "Feedback", true, None::<&str>)?;
+            help_menu.append_items(&[&changelog, &feedback])?;
+
             // Create the menu
-            let menu =
-                Menu::with_items(handle, &[&paper_menu, &file_menu, &edit_menu, &view_menu])?;
+            let menu = Menu::with_items(
+                handle,
+                &[&paper_menu, &file_menu, &edit_menu, &view_menu, &help_menu],
+            )?;
             app.set_menu(menu)?;
 
             app.on_menu_event(|app, event| {
