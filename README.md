@@ -1,5 +1,10 @@
 # Paper
 
+> **Superseded by [PaperV2](https://github.com/UsePaper/PaperV2).** This is the first
+> Paper: React and Tiptap on Tauri. The second is a rewrite on ProseMirror with a
+> stricter rule about the file on disk, and it is where the work continues. This
+> repository stays up because it is where the idea was worked out.
+
 Paper is a lightweight Tauri-based Markdown editor with a focus on clean typing, quick word-count insight, and simple file operations on desktop. It is inspired by [Typora](https://typora.io/).
 
 ## Quick start
